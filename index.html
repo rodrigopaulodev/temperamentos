@@ -57,21 +57,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .opt:hover{box-shadow:0 4px 16px rgba(0,0,0,.12)}
 .opt.selected{box-shadow:0 4px 20px rgba(0,0,0,.18)}
 .opt-letter{font-size:1.1rem;min-width:24px;padding-top:1px;flex-shrink:0}
-
-/* LAYOUT 2: Cards com emoji no topo */
-.opt.layout-card{flex-direction:column;align-items:center;text-align:center;gap:12px;padding:20px 16px;min-height:120px;justify-content:center}
-.opt.layout-card .opt-letter{font-size:2rem;min-width:auto;padding-top:0}
-.opt.layout-card span{font-size:0.95rem}
-
-/* LAYOUT 3: Minimalista com número */
-.opt.layout-minimal{padding:14px 18px;font-size:1rem;gap:12px;align-items:center}
-.opt.layout-minimal .opt-letter{min-width:28px;font-weight:700;color:var(--purple);font-size:1.1rem}
-.opt.layout-minimal span{font-weight:400}
-
-/* LAYOUT 4: Radio Button */
-.opt.layout-radio{gap:16px;align-items:center}
-.opt.layout-radio .opt-letter{width:20px;height:20px;min-width:20px;border-radius:50%;border:2px solid var(--muted);background:#fff;display:flex;align-items:center;justify-content:center;padding:0;font-size:0.9rem;margin-right:4px}
-.opt.layout-radio.selected .opt-letter{border-color:var(--purple);background:var(--purple);color:#fff}
 .nav{display:flex;justify-content:space-between;align-items:center}
 .btn-nav{padding:11px 24px;border:none;border-radius:99px;background:#fff;color:var(--muted);font-size:.9rem;cursor:pointer;font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:all .15s}
 .btn-nav:hover:not(:disabled){color:var(--purple)}
@@ -553,42 +538,21 @@ function render(){
   obsEl.style.display=q.obs?'block':'none';
   var opts=document.getElementById('options');
   opts.innerHTML='';
-
-  // Determinar layout baseado no índice da pergunta (variação a cada 4)
-  var layoutCycle=current%4;
-  var layoutClass='';
-  var letterContent='';
-  if(layoutCycle===1) layoutClass='layout-card';
-  else if(layoutCycle===2) layoutClass='layout-minimal';
-  else if(layoutCycle===3) layoutClass='layout-radio';
-  // layoutCycle===0 usa layout padrão (sem classe adicional)
-
   for(var i=0;i<q.opts.length;i++){
     var b=document.createElement('button');
     var sc=q.opts[i].s;
     var topKey=determineTypeForOption(sc.e||0, sc.a||0, sc.r||0);
     var ts=tagStyles[topKey];
     var isSelected=answers[current]===i;
-    b.className='opt '+layoutClass+(isSelected?' selected':'');
+    b.className='opt'+(isSelected?' selected':'');
     b.dataset.i=i;
     b._topKey=topKey;
     b.style.background=isSelected?(ts?ts.color:'#7F77DD'):(ts?ts.bg:'#fff');
     b.style.color=isSelected?'#fff':(ts?ts.color:'#2d2b45');
     b.style.borderColor='transparent';
     b.style.boxShadow='0 2px 10px rgba(0,0,0,.08)';
-
-    // Determinar ícone/letra baseado no layout
-    if(layoutCycle===2){
-      // Minimalista: número (A, B, C, D)
-      letterContent=String.fromCharCode(65+i); // A, B, C, D
-    } else if(layoutCycle===3){
-      // Radio: ponto ou círculo vazio
-      letterContent='◯';
-    } else {
-      // Padrão ou Cards: emoji
-      letterContent=temperamentos8[topKey]?temperamentos8[topKey].emoji:'•';
-    }
-    b.innerHTML='<span class="opt-letter">'+letterContent+'</span><span>'+q.opts[i].t+'</span>';
+    var icon=temperamentos8[topKey]?temperamentos8[topKey].emoji:'•';
+    b.innerHTML='<span class="opt-letter">'+icon+'</span><span>'+q.opts[i].t+'</span>';
     b.onclick=(function(idx){return function(){selectOpt(idx);};})(i);
     opts.appendChild(b);
   }
