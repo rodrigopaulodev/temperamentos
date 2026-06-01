@@ -259,10 +259,14 @@ $questions = [
 ];
 
 $temps = [
-    'colérico'   => ['name' => 'Colérico',   'badge' => 'Extrovertido · Emocional · Ativo'],
-    'sanguíneo'  => ['name' => 'Sanguíneo',  'badge' => 'Extrovertido · Não-Emocional · Ativo'],
-    'fleumático' => ['name' => 'Fleumático', 'badge' => 'Introvertido · Não-Emocional · Inativo'],
-    'sentimental'=> ['name' => 'Melancólico','badge' => 'Introvertido · Emocional · Inativo'],
+    'apaixonado'  => ['name' => 'Apaixonado',   'badge' => 'Emotivo · Ativo · Secundário', 'e'=>1, 'a'=>1, 'r'=>1],
+    'colérico'    => ['name' => 'Colérico',     'badge' => 'Emotivo · Ativo · Primário', 'e'=>1, 'a'=>1, 'r'=>-1],
+    'sanguíneo'   => ['name' => 'Sanguíneo',    'badge' => 'Não-Emotivo · Ativo · Primário', 'e'=>-1, 'a'=>1, 'r'=>-1],
+    'sentimental' => ['name' => 'Sentimental',  'badge' => 'Emotivo · Inativo · Secundário', 'e'=>1, 'a'=>-1, 'r'=>1],
+    'apático'     => ['name' => 'Apático',      'badge' => 'Não-Emotivo · Inativo · Secundário', 'e'=>-1, 'a'=>-1, 'r'=>1],
+    'fleumático'  => ['name' => 'Fleumático',   'badge' => 'Não-Emotivo · Ativo · Secundário', 'e'=>-1, 'a'=>1, 'r'=>1],
+    'nervoso'     => ['name' => 'Nervoso',      'badge' => 'Emotivo · Inativo · Primário', 'e'=>1, 'a'=>-1, 'r'=>-1],
+    'amorfo'      => ['name' => 'Amorfo',       'badge' => 'Não-Emotivo · Inativo · Primário', 'e'=>-1, 'a'=>-1, 'r'=>-1],
 ];
 
 // Monta o texto das respostas
@@ -278,20 +282,28 @@ $t  = $temps[$winner];
 $t2 = $secondKey ? $temps[$secondKey] : null;
 
 $prompt =
-    "Você é um especialista em temperamentos humanos com profundo conhecimento das obras de Hipócrates, Hans Eysenck, André Le Gall, Antonio Nemi, Padre Paulo Ricardo de Azevedo Jr. e Murilo Frizanco.\n\n" .
-    "Contexto do vault de conhecimento:\n" .
-    "- Hipócrates/Galeno: teoria dos humores (sangue, bílis amarela, bílis negra, fleuma)\n" .
-    "- Eysenck: dimensões introversão/extroversão e estabilidade emocional\n" .
-    "- Le Gall e Nemi: temperamentos e graça, perspectiva cristã clássica\n" .
-    "- Padre Paulo Ricardo: defeito dominante de cada temperamento, mortificação específica, graça que aperfeiçoa a natureza (gratia non tollit naturam, sed perficit)\n" .
-    "- Frizanco: aplicações práticas em trabalho, liderança e relacionamentos\n\n" .
-    "O usuário fez um quiz e obteve:\n" .
-    "- Temperamento dominante: {$t['name']} ({$t['badge']})\n" .
-    ($t2 ? "- Temperamento secundário: {$t2['name']}\n" : '') .
+    "Você é um especialista em temperamentos humanos com profundo conhecimento do sistema Heymans-Le Senne (8 temperamentos baseados em 3 eixos) e das obras de Hipócrates, Padre Paulo Ricardo, Pe. Antonio Royo Marín, Pe. José Antonio Gonzalez e Murilo Frizanco.\n\n" .
+    "SISTEMA DOS 8 TEMPERAMENTOS (Heymans-Le Senne):\n" .
+    "Baseado em 3 eixos:\n" .
+    "- Emotividade (E+ emotivo vs E- não-emotivo): reatividade emocional\n" .
+    "- Atividade (A+ ativo vs A- inativo): ritmo de ação e energia\n" .
+    "- Ressonância (S secundário vs P primário): duração/impacto da emoção\n\n" .
+    "Os 8 tipos:\n" .
+    "1. Apaixonado (E+A+S): Ardente, tenacioso, líder com força de vontade - defeito: ira e rancor\n" .
+    "2. Colérico (E+A+P): Impulsivo, aventureiro, enérgico - defeito: ira e superficialidade\n" .
+    "3. Sanguíneo (E-A+P): Alegre, comunicativo, adaptável - defeito: inconstância e vaidade\n" .
+    "4. Sentimental (E+A-S): Profundo, reflexivo, criativo - defeito: tristeza e autocrítica\n" .
+    "5. Apático (E-A-S): Tranquilo, observador, sábio - defeito: apatia e desinteresse\n" .
+    "6. Fleumático (E-A+S): Confiável, paciente, constante - defeito: acídia e preguiça\n" .
+    "7. Nervoso (E+A-P): Sensível, artístico, compassivo - defeito: sensibilidade que escraviza\n" .
+    "8. Amorfo (E-A-P): Influenciável, versátil, descompromissado - defeito: preguiça e negligência\n\n" .
+    "O usuário fez um quiz com 20 perguntas sobre esses eixos e obteve:\n" .
+    "- Tipo primário: {$t['name']} ({$t['badge']})\n" .
+    ($t2 ? "- Influência secundária: {$t2['name']}\n" : '') .
     "\nRespostas às 20 perguntas:\n{$answersText}" .
-    "\nGere uma análise PERSONALIZADA e CONCISA com base nas respostas acima. Seja direto, identifique padrões únicos, mencione defeitos com compaixão. Use português brasileiro caloroso. IMPORTANTE: mantenha cada campo curto (máximo 3 frases cada) para caber no limite de tokens.\n" .
+    "\nGere uma análise PERSONALIZADA e CONCISA com base nas respostas acima. Cite padrões específicos das respostas, mencione o defeito dominante com compaixão, reconheça as qualidades únicas. Use português brasileiro caloroso. Mantenha cada campo curto (máximo 3 frases) para caber no limite de tokens.\n" .
     'Responda APENAS em JSON válido sem markdown, sem texto antes ou depois:' . "\n" .
-    '{"perfil":"2 frases sobre o perfil único desta pessoa baseado nas respostas — cite padrões concretos","cotidiano":"2 frases sobre como este temperamento aparece no trabalho e relacionamentos","desafios":"2 frases sobre os maiores desafios — mencione o defeito dominante com compaixão","crescimento":"2 frases com caminhos concretos de crescimento baseados na tradição clássica","pessoas":[{"emoji":"emoji","nome":"Nome histórico ou santo com este temperamento","descricao":"1 frase específica sobre como o temperamento aparece nesta pessoa"},{"emoji":"emoji","nome":"Segundo nome","descricao":"1 frase específica"},{"emoji":"emoji","nome":"Terceiro nome","descricao":"1 frase específica"}]}';
+    '{"perfil":"2 frases sobre o perfil único — cite padrões concretos das respostas","cotidiano":"2 frases sobre como aparece no trabalho e relacionamentos","desafios":"2 frases sobre maiores desafios — mencione o defeito dominante com compaixão","crescimento":"2 frases com caminhos de crescimento específicos a este tipo","pessoas":[{"emoji":"emoji","nome":"Nome histórico ou santo com este temperamento","descricao":"1 frase sobre como o temperamento aparece nesta pessoa"},{"emoji":"emoji","nome":"Segundo nome","descricao":"1 frase"},{"emoji":"emoji","nome":"Terceiro nome","descricao":"1 frase"}]}';
 
 // Chama a API da Anthropic
 if (!function_exists('curl_init')) {
