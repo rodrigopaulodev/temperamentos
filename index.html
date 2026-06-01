@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz dos Temperamentos</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#7F77DD;--purple-dark:#534AB7;--purple-light:#f0effc;
+  --bg:#ffffff;--text:#2d2b45;--muted:#8885a8;--border:#ebe9f8;
+  --radius:20px;--radius-sm:12px;
+}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem}
+@keyframes heroFadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heroScaleIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
+@keyframes heroSlideLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes heroSlideRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes heroBounce{0%{opacity:0;transform:scale(0.5)}60%{transform:scale(1.08)}80%{transform:scale(0.97)}100%{opacity:1;transform:scale(1)}}
+.hero{text-align:center;max-width:560px;padding:1rem 0}
+.ha{opacity:0}
+.hero-img{max-width:420px;width:100%;margin-bottom:1rem;border-radius:24px}
+.hero-title{font-family:'Oswald','Impact','Arial Narrow',sans-serif;font-size:2rem;font-weight:700;color:var(--purple-dark);letter-spacing:2px;margin-bottom:.4rem;line-height:1.2}
+.hero-sub{font-size:.95rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
+.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:1.75rem}
+@media(max-width:560px){.tags{display:grid;grid-template-columns:repeat(2,auto)}}
+.tag{padding:6px 16px;border-radius:99px;font-size:12px;font-weight:600;border:1.5px solid;cursor:pointer;transition:opacity .15s,transform .15s}
+.tag:hover{opacity:.8;transform:scale(1.05)}
+.tag.t-col{background:#FFE0E0;color:#C0392B;border-color:#E74C3C}
+.tag.t-san{background:#FFF0C0;color:#D35400;border-color:#E67E22}
+.tag.t-fleu{background:#C8F0E8;color:#0E8C6A;border-color:#1ABC9C}
+.tag.t-mel{background:#EDE0FF;color:#6C3483;border-color:#9B59B6}
+.tag.t-ner{background:#FFE4CC;color:#A04000;border-color:#E67E22}
+.tag.t-aix{background:#FFD6E8;color:#922B55;border-color:#E91E8C}
+.tag.t-apa{background:#E8E8E0;color:#4A4A40;border-color:#95A5A6}
+.tag.t-amo{background:#C8F5E0;color:#0B6E4F;border-color:#27AE60}
+.btn-start{padding:15px 40px;background:#6C63FF;color:#fff;border:none;border-radius:99px;font-size:1rem;font-weight:600;cursor:pointer;transition:background .2s;letter-spacing:1px;text-transform:uppercase;box-shadow:0 6px 20px rgba(108,99,255,.45)}
+.btn-start:hover{background:#5A52E0}
+.hero-meta{margin-top:1rem;font-size:12px;color:var(--muted)}
+.refs-books{margin-top:1.5rem;padding:1rem 1.25rem;border-radius:var(--radius-sm);background:#f0effc;border:1px solid #ccc8f4;text-align:left;max-width:420px;margin-left:auto;margin-right:auto}
+.refs-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#534AB7;margin-bottom:.6rem}
+.refs-list{display:flex;flex-direction:column;gap:5px}
+.refs-list span{font-size:12.5px;color:var(--muted)}
+.refs-list em{color:#534AB7;font-style:italic}
+.dev-credit{margin-top:1.25rem;font-size:13px;color:var(--muted)}
+.dev-credit strong{color:var(--purple-dark);font-weight:700}
+.quiz-wrap{width:100%;max-width:560px;display:none}
+.progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.progress-label{font-size:13px;color:var(--muted)}
+.progress-pct{font-size:13px;font-weight:600;color:var(--purple)}
+.progress-track{width:100%;height:5px;background:var(--border);border-radius:3px;margin-bottom:2.5rem;overflow:hidden}
+.progress-fill{height:5px;background:var(--purple);border-radius:3px;transition:width .4s ease}
+.q-text{font-size:1.2rem;font-weight:600;line-height:1.55;margin-bottom:.6rem;color:var(--text)}
+.q-obs{font-size:.78rem;color:var(--muted);font-style:italic;line-height:1.5;margin-bottom:1.4rem;padding-left:2px;opacity:.85}
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:2rem}
+.opt{padding:16px 22px;border-radius:var(--radius-sm);color:var(--text);font-size:1.05rem;font-weight:400;line-height:1.5;text-align:left;cursor:pointer;transition:background .2s,box-shadow .2s;width:100%;display:flex;align-items:flex-start;gap:14px;border:none;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.opt:hover{box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.opt.selected{box-shadow:0 4px 20px rgba(0,0,0,.18)}
+.opt-letter{font-size:1.1rem;min-width:24px;padding-top:1px;flex-shrink:0}
+.nav{display:flex;justify-content:space-between;align-items:center}
+.btn-nav{padding:11px 24px;border:none;border-radius:99px;background:#fff;color:var(--muted);font-size:.9rem;cursor:pointer;font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,.06);transition:all .15s}
+.btn-nav:hover:not(:disabled){color:var(--purple)}
+.btn-nav:disabled{opacity:.3;cursor:not-allowed}
+.btn-next{background:var(--purple);color:#fff;box-shadow:0 4px 16px rgba(127,119,221,.3)}
+.btn-next:hover:not(:disabled){background:var(--purple-dark);color:#fff}
+.result-wrap{width:100%;max-width:560px;display:none}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes slideRight{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes bounceIn{0%{opacity:0;transform:scale(0.3)}50%{transform:scale(1.1)}70%{transform:scale(0.95)}100%{opacity:1;transform:scale(1)}}
+.anim-fadeup{opacity:0;animation:fadeUp .5s cubic-bezier(.4,0,.2,1) forwards}
+.anim-popin{opacity:0;animation:popIn .4s cubic-bezier(.4,0,.2,1) forwards}
+.anim-slide{opacity:0;animation:slideRight .4s cubic-bezier(.4,0,.2,1) forwards}
+.anim-bounce{opacity:0;animation:bounceIn .6s cubic-bezier(.4,0,.2,1) forwards}
+.result-top{text-align:center;margin-bottom:2.5rem}
+.result-sub{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.4rem}
+.result-name{font-size:2.4rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.result-badge{display:inline-block;padding:5px 16px;border-radius:99px;background:var(--purple-light);color:var(--purple-dark);font-size:12px;font-weight:500;margin-bottom:1.25rem}
+.result-desc{font-size:.95rem;color:var(--muted);line-height:1.75;max-width:480px;margin:0 auto}
+.result-secondary{margin-top:1.5rem;padding:1rem 1.25rem;border-radius:var(--radius-sm);background:var(--purple-light);border:1px solid #dddaf8;text-align:left}
+.sec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem}
+.sec-name{font-size:1.2rem;font-weight:700;margin-bottom:.4rem}
+.sec-desc{font-size:.88rem;color:var(--muted);line-height:1.65}
+.divider{height:1px;background:var(--border);margin:2rem 0}
+.pf-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem}
+@media(max-width:480px){.pf-grid{grid-template-columns:1fr;gap:1rem}}
+.pf-section{margin-bottom:0}
+.pf-heading{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:1rem}
+.pf-list{display:flex;flex-direction:column;gap:8px}
+.pf-item{display:flex;align-items:center;gap:12px;font-size:.93rem;color:var(--text)}
+.pf-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pf-dot.pos{background:#1D9E75}
+.pf-dot.neg{background:#D85A30}
+.ai-result{margin-bottom:2rem}
+.ai-loading{text-align:center;padding:2rem;color:var(--muted)}
+.ai-spinner{display:inline-block;width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:1rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-section{margin-bottom:1.5rem;opacity:0;animation:fadeUp .5s forwards}
+.ai-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--purple-dark);margin-bottom:.6rem}
+.ai-section-text{font-size:.95rem;color:var(--text);line-height:1.75}
+.ai-person{display:flex;gap:12px;padding:.85rem 1rem;background:#fff;border-radius:var(--radius-sm);box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:.75rem}
+.ai-person-emoji{font-size:1.8rem;flex-shrink:0}
+.ai-person-name{font-weight:700;font-size:.95rem;color:var(--text);margin-bottom:.2rem}
+.ai-person-desc{font-size:.85rem;color:var(--muted);line-height:1.6}
+.ai-error{color:#E24B4A;font-size:.9rem;padding:1rem;background:#fde8e8;border-radius:var(--radius-sm)}
+.chart-section{margin-bottom:2rem}
+.chart-heading{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:1rem}
+.score-tags{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+.score-tag{padding:7px 16px;border-radius:99px;font-size:12px;font-weight:600;border:1.5px solid;display:flex;align-items:center;gap:10px;position:relative;overflow:hidden}
+.score-tag-bg{position:absolute;top:0;left:0;height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1);z-index:0;opacity:0.35}
+.score-tag-label{position:relative;z-index:1;white-space:nowrap}
+.score-tag-pts{position:relative;z-index:1;font-size:11px;font-weight:400;margin-left:auto;white-space:nowrap;opacity:.8}
+.result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
+.btn-restart{padding:12px 28px;background:#fff;color:var(--purple);border:none;border-radius:99px;font-size:.9rem;font-weight:600;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.btn-share{padding:12px 28px;background:var(--purple);color:#fff;border:none;border-radius:99px;font-size:.9rem;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(127,119,221,.3)}
+.btn-share:hover{background:var(--purple-dark)}
+.footer{text-align:center;font-size:11px;color:var(--muted);line-height:2}
+.footer strong{color:var(--text);font-weight:600}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:#2d2b45;color:#fff;padding:10px 22px;border-radius:99px;font-size:13px;opacity:0;transition:all .3s;z-index:999}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media print{body>*:not(#result){display:none!important}#result{display:block!important;max-width:100%;box-shadow:none}#result .result-actions{display:none!important}.ai-spinner{display:none!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<div class="hero" id="hero">
+  <img src="./logo.png" alt="Personagens dos temperamentos" class="hero-img ha" data-anim="heroScaleIn" data-dur="0.8"/>
+  <div class="hero-title ha" data-anim="heroBounce" data-dur="0.7">QUAL É O SEU<br>TEMPERAMENTO?</div>
+  <div class="hero-sub ha" data-anim="heroFadeIn" data-dur="0.6">Descubra qual dos 4 temperamentos clássicos melhor descreve você.</div>
+  <button class="btn-start ha" id="btnStart" data-anim="heroBounce" data-dur="0.6">Começar o quiz</button>
+  <div class="hero-meta ha" data-anim="heroFadeIn" data-dur="0.5">20 perguntas · cerca de 5 minutos</div>
+  <div class="tags" style="margin-top:1.5rem">
+    <span class="tag t-col ha" id="tag-col" data-anim="heroSlideLeft" data-dur="0.4">🔥 Colérico</span>
+    <span class="tag t-san ha" id="tag-san" data-anim="heroFadeIn" data-dur="0.4">☀️ Sanguíneo</span>
+    <span class="tag t-fleu ha" id="tag-fleu" data-anim="heroSlideRight" data-dur="0.4">🌊 Fleumático</span>
+    <span class="tag t-mel ha" id="tag-mel" data-anim="heroFadeIn" data-dur="0.4">🌙 Melancólico</span>
+  </div>
+  <div class="refs-books ha" data-anim="heroFadeIn" data-dur="0.7">
+    <div class="refs-title">Referências bibliográficas</div>
+    <div class="refs-list">
+      <span>Padre Paulo Ricardo · <em>Os Quatro Temperamentos</em></span>
+      <span>Murilo Frizanco · <em>Os 4 Temperamentos</em></span>
+      <span>Mestre Gabriel Amorim · <em>Decifrando os Temperamentos Humanos</em></span>
+    </div>
+  </div>
+  <div class="dev-credit">Desenvolvido por <strong>Rodrigo Paulo</strong></div>
+</div>
+
+<div class="quiz-wrap" id="quiz">
+  <div class="progress-row">
+    <span class="progress-label" id="q-num">1 de 20</span>
+    <span class="progress-pct" id="q-pct">5%</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progress" style="width:5%"></div></div>
+  <div class="q-text" id="q-text"></div>
+  <div class="q-obs" id="q-obs"></div>
+  <div class="options" id="options"></div>
+  <div class="nav">
+    <button class="btn-nav" id="btn-prev">← Voltar</button>
+    <button class="btn-nav btn-next" id="btn-next">Próxima →</button>
+  </div>
+</div>
+
+<div class="result-wrap" id="result">
+  <div class="result-top">
+    <span id="res-emoji" style="font-size:3rem;display:block;margin-bottom:1rem"></span>
+    <div class="result-sub">temperamento dominante</div>
+    <div class="result-name" id="res-name"></div>
+    <div class="result-badge" id="res-badge"></div>
+    <p class="result-desc" id="res-desc"></p>
+    <div class="result-secondary" id="res-secondary" style="display:none">
+      <div class="sec-label">com influência de</div>
+      <div class="sec-name" id="res-sec-name"></div>
+      <p class="sec-desc" id="res-sec-desc"></p>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="pf-grid">
+    <div class="pf-section">
+      <div class="pf-heading">Pontos fortes</div>
+      <div class="pf-list" id="res-pos"></div>
+    </div>
+    <div class="pf-section">
+      <div class="pf-heading">A desenvolver</div>
+      <div class="pf-list" id="res-neg"></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="ai-result">
+    <div class="ai-loading" id="aiLoading" style="display:none">
+      <div class="ai-spinner"></div>
+      <div>Gerando sua análise personalizada com IA...</div>
+    </div>
+    <div id="aiContent"></div>
+  </div>
+  <div class="divider"></div>
+  <div class="chart-section">
+    <div class="chart-heading">Todos os temperamentos</div>
+    <div class="score-tags" id="scoreTags"></div>
+  </div>
+  <div class="result-actions">
+    <button class="btn-restart" id="btnRestart">↺ Refazer</button>
+    <button class="btn-share" id="btnShare">Compartilhar</button>
+  </div>
+  <div class="footer">
+    Baseado em Hipócrates · Eysenck · Le Gall · Nemi<br>
+    <strong>Desenvolvido por Rodrigo Paulo</strong>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Bottom sheet de compartilhamento (mobile) -->
+<div id="shareOverlay" onclick="fecharShareSheet()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:998"></div>
+<div id="shareSheet" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;padding:8px 20px 32px;box-shadow:0 -4px 24px rgba(0,0,0,.18);z-index:999">
+  <div style="width:36px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 18px"></div>
+  <div style="font-size:13px;font-weight:700;color:#2d2b45;margin-bottom:14px;text-align:center">Compartilhar resultado</div>
+  <button id="btnWpp" style="display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;background:#25D366;color:#fff;border:none;border-radius:14px;font-size:1rem;font-weight:600;cursor:pointer;margin-bottom:10px">
+    <svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.2.6 4.3 1.7 6.2L3 29l7.3-1.9c1.8 1 3.8 1.5 5.8 1.5 7 0 12.7-5.7 12.7-12.7S23 3 16 3zm6.5 17.4c-.3.8-1.5 1.5-2.1 1.6-.5.1-1.2.1-1.9-.1-.4-.2-1-.4-1.8-.8-3-1.3-5-4.3-5.2-4.5-.1-.2-1.1-1.5-1.1-2.8s.7-2 .9-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5.2.4.8 1.9.9 2s.1.3 0 .5c-.1.2-.2.3-.3.4l-.5.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.2 1.4 2.5 1.5.3.1.5 0 .7-.2l.9-1.1c.2-.3.4-.2.7-.1l2.3 1.1c.3.1.5.2.5.4.1.2.1.9-.1 1.7z"/></svg>
+    WhatsApp
+  </button>
+  <button id="btnSharePDF" style="display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;background:#f0effc;color:#534AB7;border:none;border-radius:14px;font-size:1rem;font-weight:600;cursor:pointer;margin-bottom:10px">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#534AB7" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+    Baixar PDF
+  </button>
+  <button onclick="fecharShareSheet()" style="width:100%;padding:13px;background:none;border:none;color:#8885a8;font-size:.95rem;cursor:pointer">Cancelar</button>
+</div>
+
+<script>
+var questions=[
+  {text:"Diante de um problema urgente, minha primeira reação é:",obs:"A velocidade de reação diferencia os temperamentos ativos (colérico/sanguíneo) dos inativos (melancólico/fleumático) — Eysenck",opts:[
+    {t:"Agir imediatamente — pensar depois",s:{colérico:3,sanguíneo:1}},
+    {t:"Analisar com calma todos os ângulos antes de mover",s:{fleumático:3,sentimental:1}},
+    {t:"Sentir o peso da situação e refletir longamente",s:{sentimental:3,fleumático:1}},
+    {t:"Esperar — raramente sinto urgência",s:{fleumático:3,sanguíneo:1}}
+  ]},
+  {text:"Em grupos ou reuniões, eu naturalmente:",obs:"Eixo introversão/extroversão de Eysenck — base estrutural da teoria dos temperamentos",opts:[
+    {t:"Assumo a liderança e direciono o rumo",s:{colérico:3,sanguíneo:1}},
+    {t:"Animo o ambiente e falo bastante",s:{sanguíneo:3,colérico:1}},
+    {t:"Ouço mais do que falo, observo as pessoas",s:{fleumático:2,sentimental:2}},
+    {t:"Fico quieto — prefiro passar despercebido",s:{sentimental:3,fleumático:1}}
+  ]},
+  {text:"Minha vida emocional é:",obs:"Eysenck: colérico e melancólico são emocionais; sanguíneo e fleumático têm maior estabilidade emocional",opts:[
+    {t:"Intensa e expressada abertamente",s:{colérico:2,sanguíneo:2}},
+    {t:"Profunda, mas guardada para mim",s:{sentimental:3,fleumático:1}},
+    {t:"Estável — me abalo raramente",s:{fleumático:3,sanguíneo:1}},
+    {t:"Variável e comunicativa",s:{sanguíneo:3,colérico:1}}
+  ]},
+  {text:"Nas minhas horas livres, costumo:",obs:"Frizanco: o que fazemos espontaneamente no tempo livre revela o temperamento mais profundo",opts:[
+    {t:"Fazer algo produtivo — descansar sem fazer nada me incomoda",s:{colérico:3,sanguíneo:1}},
+    {t:"Estar com pessoas, sair, conversar e me divertir",s:{sanguíneo:3,colérico:1}},
+    {t:"Ler, criar, refletir ou ficar em silêncio comigo mesmo",s:{sentimental:3,fleumático:1}},
+    {t:"Descansar de verdade — sem culpa e sem pressa de fazer algo",s:{fleumático:3,sentimental:1}}
+  ]},
+  {text:"Minha relação com novidades e mudanças é:",obs:"Sanguíneo abraça novidades por sociabilidade; colérico por controle — motivações opostas para atitudes parecidas",opts:[
+    {t:"Adoro novidades — a rotina me entedia",s:{sanguíneo:3,colérico:1}},
+    {t:"Prefiro estabilidade e previsibilidade",s:{fleumático:3,sentimental:1}},
+    {t:"Processo internamente antes de aceitar",s:{sentimental:3,fleumático:1}},
+    {t:"Gosto quando as mudanças partem de mim",s:{colérico:3,sanguíneo:1}}
+  ]},
+  {text:"Nos meus relacionamentos pessoais, tenho:",obs:"Frizanco: qualidade vs. quantidade de vínculos é um dos marcadores mais confiáveis do temperamento",opts:[
+    {t:"Muitos amigos, conexões fáceis mas nem sempre profundas",s:{sanguíneo:3,colérico:1}},
+    {t:"Poucos vínculos, mas muito profundos e leais",s:{sentimental:3,fleumático:1}},
+    {t:"Relações cordiais mas sem grande intimidade",s:{fleumático:3,sanguíneo:1}},
+    {t:"Relações onde naturalmente lidero ou organizo",s:{colérico:3,sentimental:1}}
+  ]},
+  {text:"Quando fico com raiva ou sinto injustiça:",obs:"Pe. Paulo Ricardo: o colérico explode e esquece; o melancólico guarda para sempre — diferença fundamental entre os dois",opts:[
+    {t:"Explodo rapidamente — mas passo logo",s:{colérico:3,sanguíneo:1}},
+    {t:"Guardo silenciosamente por muito tempo",s:{sentimental:3,fleumático:1}},
+    {t:"Raramente me irrito de forma séria",s:{fleumático:3,sanguíneo:1}},
+    {t:"Fico desconfortável mas esqueço rápido",s:{sanguíneo:3,fleumático:1}}
+  ]},
+  {text:"Quando sou criticado ou humilhado:",obs:"Critério diagnóstico central do Pe. Paulo Ricardo — a resposta à humilhação revela o temperamento com precisão",opts:[
+    {t:"Fico indignado — sinto que é injusto e reajo, mesmo que internamente",s:{colérico:3,sentimental:1}},
+    {t:"Sinto vergonha ou constrangimento, mas supero e esqueço em pouco tempo",s:{sanguíneo:3,colérico:1}},
+    {t:"Sinto profundamente e carrego isso por muito tempo — às vezes não esqueço",s:{sentimental:3,fleumático:1}},
+    {t:"Aceito com tranquilidade real — não fico agitado por dentro com isso",s:{fleumático:3,sanguíneo:1}}
+  ]},
+  {text:"Ao tomar uma decisão importante:",obs:"Colérico decide por instinto; melancólico analisa em excesso; fleumático evita decidir sozinho — Frizanco",opts:[
+    {t:"Decido rápido e confio no instinto",s:{colérico:3,sanguíneo:1}},
+    {t:"Analiso todos os detalhes antes de decidir",s:{sentimental:3,fleumático:1}},
+    {t:"Fico em dúvida e prefiro não decidir sozinho",s:{fleumático:3,sentimental:1}},
+    {t:"Decido com base no que me anima mais",s:{sanguíneo:3,colérico:1}}
+  ]},
+  {text:"Minha tendência perante fracassos é:",obs:"Sanguíneo supera rápido e segue em frente; melancólico carrega o fracasso por muito tempo — extremos opostos",opts:[
+    {t:"Supero rápido e sigo em frente",s:{sanguíneo:3,colérico:1}},
+    {t:"Sinto fundo por bastante tempo — levo para o coração",s:{sentimental:3,fleumático:1}},
+    {t:"Aceito com tranquilidade sem grande drama",s:{fleumático:3,sanguíneo:1}},
+    {t:"Fico irritado e busco um culpado ou solução",s:{colérico:3,sentimental:1}}
+  ]},
+  {text:"Em situações de pressão ou crise:",obs:"Frizanco: o colérico produz melhor sob pressão; o fleumático mantém calma metódica — eficazes de formas opostas",opts:[
+    {t:"Produzo melhor — a pressão me motiva",s:{colérico:3,sanguíneo:1}},
+    {t:"Mantenho a calma e trabalho metodicamente",s:{fleumático:3,sentimental:1}},
+    {t:"Me fecho e processo tudo internamente",s:{sentimental:3,fleumático:1}},
+    {t:"Busco apoio e falo sobre o que estou sentindo",s:{sanguíneo:3,colérico:1}}
+  ]},
+  {text:"Minha mente costuma:",obs:"Pe. Paulo Ricardo: a ruminação incontrolável da imaginação é o defeito central do melancólico — e o ponto a mortificar",opts:[
+    {t:"Estar focada em objetivos, metas e próximos passos",s:{colérico:3,fleumático:1}},
+    {t:"Pular de assunto em assunto — cheia de ideias e planos dispersos",s:{sanguíneo:3,colérico:1}},
+    {t:"Revisitar o passado, criar cenários e ruminar situações — difícil de desligar",s:{sentimental:3,sanguíneo:1}},
+    {t:"Funcionar de forma prática e linear — sem excessos de fantasia ou ruminação",s:{fleumático:3,sentimental:1}}
+  ]},
+  {text:"Minha relação com regras e autoridade:",obs:"Colérico questiona por orgulho; fleumático aceita por harmonia — motivações diferentes para comportamentos aparentemente parecidos",opts:[
+    {t:"Questiono — prefiro liderar a ser liderado",s:{colérico:3,sanguíneo:1}},
+    {t:"Sigo sem problemas — prefiro harmonia",s:{fleumático:3,sanguíneo:1}},
+    {t:"Respeito, mas avalio criticamente se faz sentido",s:{sentimental:3,colérico:1}},
+    {t:"Sigo quando conveniente, questiono quando não",s:{sanguíneo:3,fleumático:1}}
+  ]},
+  {text:"Minha vida interior é:",obs:"Melancólico vive intensamente para dentro; sanguíneo vive para fora — extremos opostos do eixo de introversão de Eysenck",opts:[
+    {t:"Rica e intensa — vivo muito dentro de mim",s:{sentimental:3,fleumático:1}},
+    {t:"Voltada para o externo — o mundo me interessa mais",s:{sanguíneo:2,colérico:2}},
+    {t:"Estável e prática — não muito filosófica",s:{fleumático:3,sanguíneo:1}},
+    {t:"Agitada por objetivos e planos",s:{colérico:3,sentimental:1}}
+  ]},
+  {text:"Como me relaciono com o tempo:",obs:"Hipócrates: sanguíneo vive o presente; melancólico prende-se ao passado; colérico planeja o futuro; fleumático segue o ritmo",opts:[
+    {t:"Vivo o presente — o futuro não me preocupa muito",s:{sanguíneo:3,fleumático:1}},
+    {t:"Planejo cuidadosamente e olho para o futuro",s:{colérico:3,fleumático:1}},
+    {t:"Fico preso ao passado — sinto muita nostalgia",s:{sentimental:3,sanguíneo:1}},
+    {t:"Vivo no ritmo — nem pressa nem atraso",s:{fleumático:3,sentimental:1}}
+  ]},
+  {text:"Minha maior motivação na vida é:",obs:"Frizanco: legado, prazer, paz ou significado — a motivação central é o motor que move cada temperamento",opts:[
+    {t:"Alcançar metas e deixar um legado",s:{colérico:3,sentimental:1}},
+    {t:"Relacionamentos e experiências prazerosas",s:{sanguíneo:3,fleumático:1}},
+    {t:"Estabilidade, conforto e paz",s:{fleumático:3,sanguíneo:1}},
+    {t:"Significado profundo e conexão verdadeira",s:{sentimental:3,colérico:1}}
+  ]},
+  {text:"Quando alguém me magoa emocionalmente:",obs:"Pe. Paulo Ricardo: colérico confronta e supera rápido; melancólico pode guardar mágoa para sempre — diferenciador muito forte",opts:[
+    {t:"Confronto na hora e supero rápido",s:{colérico:3,sanguíneo:1}},
+    {t:"Guardo mágoa por muito tempo, às vezes para sempre",s:{sentimental:3,fleumático:1}},
+    {t:"Fico chateado por um tempo e depois esqueço",s:{sanguíneo:3,colérico:1}},
+    {t:"Aceito e sigo em frente sem grande drama",s:{fleumático:3,sentimental:1}}
+  ]},
+  {text:"Em relação a projetos e compromissos assumidos, eu:",obs:"Sanguíneo começa com entusiasmo e raramente conclui; fleumático começa devagar mas é o mais confiável até o fim — Frizanco",opts:[
+    {t:"Começo com força e costumo terminar — não gosto de deixar coisas pela metade",s:{colérico:3,sentimental:1}},
+    {t:"Começo com entusiasmo mas frequentemente não concluo — perco o interesse",s:{sanguíneo:3,fleumático:1}},
+    {t:"Planejo muito, executo devagar mas com qualidade e atenção aos detalhes",s:{sentimental:3,colérico:1}},
+    {t:"Começo devagar mas sou consistente — raramente começo e raramente desisto",s:{fleumático:3,sanguíneo:1}}
+  ]},
+  {text:"Se eu for honesto, minha tendência negativa mais recorrente é:",obs:"Pe. Paulo Ricardo: ira/orgulho (colérico), inconstância/vaidade (sanguíneo), tristeza/rancor (melancólico), acídia/preguiça (fleumático)",opts:[
+    {t:"Impaciência, irritação fácil ou orgulho — quero que as coisas sejam do meu jeito",s:{colérico:3,sentimental:1}},
+    {t:"Inconstância, vaidade ou necessidade de atenção e aprovação dos outros",s:{sanguíneo:3,colérico:1}},
+    {t:"Tristeza, rancor ou autocrítica que não me deixa em paz",s:{sentimental:3,fleumático:1}},
+    {t:"Preguiça, apatia ou procrastinação — empurro as coisas com a barriga",s:{fleumático:3,sanguíneo:1}}
+  ]},
+  {text:"Ao final de um dia intenso, eu:",obs:"Como recarregamos energia revela introversão vs. extroversão — silêncio (introvertido) ou contato social (extrovertido) — Eysenck",opts:[
+    {t:"Ainda tenho energia e quero socializar",s:{sanguíneo:3,colérico:1}},
+    {t:"Preciso de silêncio para processar e me recarregar",s:{sentimental:3,fleumático:1}},
+    {t:"Me sinto tranquilo e continuo no mesmo ritmo",s:{fleumático:3,sanguíneo:1}},
+    {t:"Fico satisfeito se fui produtivo",s:{colérico:3,sentimental:1}}
+  ]}
+];
+
+var temps={
+  colérico:{name:"Colérico",emoji:"🔥",badge:"Extrovertido · Emocional · Ativo",desc:"Você é movido pela ação. Tem liderança natural, energia inesgotável e visão clara de onde quer chegar. Humor hipocrático: bílis amarela. Defeito dominante: ira e orgulho. Virtude a cultivar: mansidão. Santos com este temperamento: São Paulo Apóstolo, Santa Teresa d'Ávila.",pos:["Liderança natural","Determinação e foco","Alta energia e proatividade","Coragem para decidir","Visão estratégica"],neg:["Impaciência com os outros","Dificuldade em ouvir","Tendência ao autoritarismo","Explosivo em conflitos","Orgulho excessivo"],color:"#E24B4A"},
+  sanguíneo:{name:"Sanguíneo",emoji:"☀️",badge:"Extrovertido · Não-Emocional · Ativo",desc:"Você é alegria em movimento. Faz amigos com facilidade, traz vida a qualquer ambiente e enfrenta tudo com otimismo genuíno. Humor hipocrático: sangue. Defeito dominante: inconstância e vaidade. Virtude a cultivar: perseverança e vida interior. Santos com este temperamento: São Pedro Apóstolo, São Filipe Néri.",pos:["Otimismo contagiante","Facilidade de comunicação","Adaptabilidade e flexibilidade","Cria laços com facilidade","Generosidade espontânea"],neg:["Superficialidade nos vínculos","Dificuldade em manter foco","Inconstância emocional","Promete mais do que cumpre","Busca excessiva de aprovação"],color:"#EF9F27"},
+  fleumático:{name:"Fleumático",emoji:"🌊",badge:"Introvertido · Não-Emocional · Inativo",desc:"Você é o ancoradouro. Calmo, confiável e paciente, oferece estabilidade a todos ao redor. Humor hipocrático: fleuma. Defeito dominante: acídia e ociosidade. Virtude a cultivar: fervor e diligência. Santos com este temperamento: São João Maria Vianney, São Tomás de Aquino.",pos:["Estabilidade emocional","Confiabilidade e constância","Paciência e prudência","Mediador natural de conflitos","Persistência silenciosa"],neg:["Resistência a mudanças","Passividade e procrastinação","Dificuldade de motivação","Pode parecer indiferente","Tédio espiritual (acídia)"],color:"#378ADD"},
+  sentimental:{name:"Melancólico",emoji:"🌙",badge:"Introvertido · Emocional · Inativo",desc:"Você tem uma vida interior extraordinariamente rica. Sente o mundo com intensidade rara e cria vínculos profundos. Humor hipocrático: bílis negra. Defeito dominante: tristeza e egocentrismo. Virtude a cultivar: esperança e amor ao próximo. Santos com este temperamento: Santa Teresinha do Menino Jesus, São João Apóstolo.",pos:["Profundidade emocional rara","Empatia intensa","Senso estético elevado","Lealdade e comprometimento profundos","Riqueza criativa e artística"],neg:["Tendência ao pessimismo","Dificuldade em superar mágoas","Autocrítica excessiva","Isolamento e introversão extrema","Paralisia emocional"],color:"#7F77DD"}
+};
+
+var tagStyles={
+  colérico:{bg:'#FFE0E0',color:'#C0392B',border:'#E74C3C'},
+  sanguíneo:{bg:'#FFF0C0',color:'#D35400',border:'#E67E22'},
+  fleumático:{bg:'#C8F0E8',color:'#0E8C6A',border:'#1ABC9C'},
+  sentimental:{bg:'#EDE0FF',color:'#6C3483',border:'#9B59B6'},
+  sentimental:{bg:'#EDE0FF',color:'#6C3483',border:'#9B59B6'}
+};
+
+var order=['colérico','sanguíneo','fleumático','sentimental'];
+var current=0;
+var answers=[];
+for(var i=0;i<questions.length;i++) answers.push(null);
+
+function renderScoreTags(scores){
+  var container=document.getElementById('scoreTags');
+  if(!container) return;
+  var sorted=order.slice().sort(function(a,b){return (scores[b]||0)-(scores[a]||0);});
+  var max=scores[sorted[0]]||1;
+  var html='';
+  for(var i=0;i<sorted.length;i++){
+    var k=sorted[i];
+    var s=tagStyles[k];
+    var t=temps[k];
+    var v=scores[k]||0;
+    var pct=Math.round((v/max)*100);
+    html+='<div class="score-tag anim-popin" style="background:'+s.bg+';color:'+s.color+';border-color:'+s.border+';animation-delay:'+(1.0+i*0.08)+'s">'+
+      '<div class="score-tag-bg" style="background:'+s.color+';width:0%" data-w="'+pct+'"></div>'+
+      '<span class="score-tag-label">'+t.emoji+' '+t.name+'</span>'+
+      '<span class="score-tag-pts">'+v+'pt</span>'+
+    '</div>';
+  }
+  container.innerHTML=html;
+  setTimeout(function(){
+    var bars=document.querySelectorAll('#scoreTags .score-tag-bg');
+    for(var i=0;i<bars.length;i++) bars[i].style.width=bars[i].getAttribute('data-w')+'%';
+  },200);
+}
+
+function fillResult(key,scores){
+  var t=temps[key];
+  var resEl=document.getElementById('result');
+  resEl.style.display='block';
+  var emoji=document.getElementById('res-emoji');
+  emoji.textContent=t.emoji;
+  emoji.className='anim-bounce';
+  var name=document.getElementById('res-name');
+  name.textContent=t.name;
+  setTimeout(function(){name.className='result-name anim-fadeup';},200);
+  var badge=document.getElementById('res-badge');
+  badge.textContent=t.badge;
+  setTimeout(function(){badge.className='result-badge anim-fadeup';},350);
+  var desc=document.getElementById('res-desc');
+  desc.textContent=t.desc;
+  setTimeout(function(){desc.className='result-desc anim-fadeup';},500);
+  var posHtml='';
+  for(var i=0;i<t.pos.length;i++) posHtml+='<div class="pf-item anim-slide" style="animation-delay:'+(0.6+i*0.1)+'s"><div class="pf-dot pos"></div>'+t.pos[i]+'</div>';
+  document.getElementById('res-pos').innerHTML=posHtml;
+  var negHtml='';
+  for(var i=0;i<t.neg.length;i++) negHtml+='<div class="pf-item anim-slide" style="animation-delay:'+(0.65+i*0.1)+'s"><div class="pf-dot neg"></div>'+t.neg[i]+'</div>';
+  document.getElementById('res-neg').innerHTML=negHtml;
+  renderScoreTags(scores);
+  document.getElementById('hero').style.display='none';
+  document.getElementById('quiz').style.display='none';
+}
+
+function generateAIResult(key,secondKey,scores,answersData){
+  var aiLoading=document.getElementById('aiLoading');
+  var aiContent=document.getElementById('aiContent');
+  aiLoading.style.display='block';
+  aiContent.innerHTML='';
+
+  fetch('claude-proxy.php',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({winner:key,secondKey:secondKey,answers:answersData})
+  }).then(function(res){return res.json();}).then(function(data){
+    if(!data.content||!data.content[0]){
+      throw new Error(data.error||'Resposta vazia da API');
+    }
+    var text=data.content[0].text.replace(/```json|```/g,'').trim();
+    var parsed=JSON.parse(text);
+    var html='';
+    html+='<div class="ai-section" style="animation-delay:.1s"><div class="ai-section-title">✦ Seu perfil único</div><div class="ai-section-text">'+parsed.perfil+'</div></div>';
+    html+='<div class="ai-section" style="animation-delay:.2s"><div class="ai-section-title">☀️ No dia a dia</div><div class="ai-section-text">'+parsed.cotidiano+'</div></div>';
+    html+='<div class="ai-section" style="animation-delay:.3s"><div class="ai-section-title">⚡ Seus desafios</div><div class="ai-section-text">'+parsed.desafios+'</div></div>';
+    html+='<div class="ai-section" style="animation-delay:.4s"><div class="ai-section-title">🌱 Caminhos de crescimento</div><div class="ai-section-text">'+parsed.crescimento+'</div></div>';
+    html+='<div class="ai-section" style="animation-delay:.5s"><div class="ai-section-title">🏛️ Pessoas históricas com seu temperamento</div>';
+    for(var i=0;i<parsed.pessoas.length;i++){
+      var p=parsed.pessoas[i];
+      html+='<div class="ai-person"><div class="ai-person-emoji">'+p.emoji+'</div><div><div class="ai-person-name">'+p.nome+'</div><div class="ai-person-desc">'+p.descricao+'</div></div></div>';
+    }
+    html+='</div>';
+    aiContent.innerHTML=html;
+    aiLoading.style.display='none';
+    saveToCache(key,secondKey,scores,answersData,html);
+  }).catch(function(err){
+    aiContent.innerHTML='<div class="ai-error">Não foi possível gerar a análise personalizada agora. Você pode tentar novamente atualizando a página. 🙏</div>';
+    aiLoading.style.display='none';
+  });
+}
+
+function goToResult(key){
+  window._result=key;
+  var scores={};
+  for(var i=0;i<order.length;i++) scores[order[i]]=order[i]===key?10:0;
+  document.getElementById('res-secondary').style.display='none';
+  fillResult(key,scores);
+  generateAIResult(key,null,scores,answers,false);
+}
+
+function startQuiz(){
+  document.getElementById('hero').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  render();
+}
+
+function render(){
+  var q=questions[current];
+  var pct=Math.round(((current+1)/questions.length)*100);
+  document.getElementById('q-num').textContent=(current+1)+' de '+questions.length;
+  document.getElementById('q-pct').textContent=pct+'%';
+  document.getElementById('progress').style.width=pct+'%';
+  document.getElementById('q-text').textContent=q.text;
+  var obsEl=document.getElementById('q-obs');
+  obsEl.textContent=q.obs?('📖 '+q.obs):'';
+  obsEl.style.display=q.obs?'block':'none';
+  var opts=document.getElementById('options');
+  opts.innerHTML='';
+  for(var i=0;i<q.opts.length;i++){
+    var b=document.createElement('button');
+    var sc=q.opts[i].s;
+    var topKey=Object.keys(sc).reduce(function(a,bb){return sc[a]>=sc[bb]?a:bb;});
+    var ts=tagStyles[topKey];
+    var isSelected=answers[current]===i;
+    b.className='opt'+(isSelected?' selected':'');
+    b.dataset.i=i;
+    b._topKey=topKey;
+    b.style.background=isSelected?(ts?ts.color:'#7F77DD'):(ts?ts.bg:'#fff');
+    b.style.color=isSelected?'#fff':(ts?ts.color:'#2d2b45');
+    b.style.borderColor='transparent';
+    b.style.boxShadow='0 2px 10px rgba(0,0,0,.08)';
+    var icon=temps[topKey]?temps[topKey].emoji:'•';
+    b.innerHTML='<span class="opt-letter">'+icon+'</span><span>'+q.opts[i].t+'</span>';
+    b.onclick=(function(idx){return function(){selectOpt(idx);};})(i);
+    opts.appendChild(b);
+  }
+  document.getElementById('btn-prev').disabled=current===0;
+  var isLast=current===questions.length-1;
+  var bn=document.getElementById('btn-next');
+  bn.textContent=isLast?'Ver resultado ✦':'Próxima →';
+  bn.disabled=answers[current]===null;
+}
+
+function selectOpt(i){
+  answers[current]=i;
+  var btns=document.querySelectorAll('.opt');
+  for(var j=0;j<btns.length;j++){
+    var isSelected=j===i;
+    btns[j].classList.toggle('selected',isSelected);
+    var k=btns[j]._topKey;
+    var ts=k?tagStyles[k]:null;
+    if(ts){
+      btns[j].style.background=isSelected?ts.color:ts.bg;
+      btns[j].style.color=isSelected?'#fff':ts.color;
+      btns[j].style.boxShadow=isSelected?'0 4px 20px rgba(0,0,0,.18)':'0 2px 10px rgba(0,0,0,.08)';
+    }
+  }
+  document.getElementById('btn-next').disabled=false;
+}
+
+function next(){
+  if(answers[current]===null) return;
+  if(current===questions.length-1){showResult();return;}
+  current++;render();
+}
+
+function prev(){if(current>0){current--;render();}}
+
+function showResult(){
+  var scores={};
+  for(var k in temps) scores[k]=0;
+  for(var qi=0;qi<questions.length;qi++){
+    var ai=answers[qi];
+    if(ai===null) continue;
+    var sc=questions[qi].opts[ai].s;
+    for(var k in sc) scores[k]=(scores[k]||0)+sc[k];
+  }
+  var sorted=order.slice().sort(function(a,b){return scores[b]-scores[a];});
+  var winner=sorted[0];
+  var secondKey=scores[sorted[1]]>=scores[winner]*0.5?sorted[1]:null;
+  if(secondKey){
+    var t2=temps[secondKey];
+    var secBlock=document.getElementById('res-secondary');
+    secBlock.style.display='block';
+    secBlock.style.borderLeft='4px solid '+t2.color;
+    document.getElementById('res-sec-name').textContent=t2.emoji+' '+t2.name;
+    document.getElementById('res-sec-name').style.color=t2.color;
+    document.getElementById('res-sec-desc').textContent=t2.desc;
+  } else {
+    document.getElementById('res-secondary').style.display='none';
+  }
+  fillResult(winner,scores);
+  generateAIResult(winner,secondKey,scores,answers,true);
+  window._result=winner;
+}
+
+function restart(){
+  localStorage.removeItem('quiz_temperamentos_v1');
+  current=0;
+  for(var i=0;i<answers.length;i++) answers[i]=null;
+  document.getElementById('result').style.display='none';
+  document.getElementById('aiContent').innerHTML='';
+  document.getElementById('hero').style.display='block';
+}
+
+function isMobile(){
+  return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||window.innerWidth<=768;
+}
+
+function gerarPDFBlob(callback){
+  var el=document.getElementById('result');
+  html2canvas(el,{
+    scale:2,useCORS:true,allowTaint:true,
+    backgroundColor:'#ffffff',
+    scrollX:0,scrollY:-window.scrollY,
+    windowWidth:Math.max(document.documentElement.offsetWidth,560),
+    onclone:function(doc){
+      // Adiciona margens laterais e remove botões
+      var r=doc.getElementById('result');
+      if(r){r.style.padding='24px 28px';r.style.boxSizing='border-box';}
+      // Força visibilidade de todos os elementos animados
+      var s=doc.createElement('style');
+      s.textContent='*,*::before,*::after{animation:none!important;transition:none!important}'
+        +'.anim-fadeup,.anim-popin,.anim-slide,.anim-bounce,.ai-section,.pf-item,.score-tag{opacity:1!important}'
+        +'.result-actions{display:none!important}';
+      doc.head.appendChild(s);
+      // Aplica largura das barras de score
+      doc.querySelectorAll('.score-tag-bg').forEach(function(n){
+        var w=n.getAttribute('data-w');if(w)n.style.width=w+'%';
+      });
+    }
+  }).then(function(canvas){
+    var imgData=canvas.toDataURL('image/jpeg',0.92);
+    // Página única com dimensão exata do conteúdo (evita cortes)
+    var pdfW=210; // mm A4 largura
+    var pdfH=Math.ceil(canvas.height*pdfW/canvas.width);
+    var pdf=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:[pdfW,pdfH]});
+    pdf.addImage(imgData,'JPEG',0,0,pdfW,pdfH);
+    callback(null,pdf);
+  }).catch(function(err){callback(err);});
+}
+
+function share(){
+  var name=temps[window._result]?temps[window._result].name:'Resultado';
+  var btn=document.getElementById('btnShare');
+  btn.textContent='Gerando...';
+  btn.disabled=true;
+
+  // Desktop: abre janela de impressão via backend (melhor qualidade)
+  if(!isMobile()){
+    var aiData=[];
+    document.querySelectorAll('.ai-section').forEach(function(sec){
+      var titleEl=sec.querySelector('.ai-section-title');
+      var textEl=sec.querySelector('.ai-section-text');
+      var persons=[];
+      sec.querySelectorAll('.ai-person').forEach(function(p){
+        persons.push({
+          emoji:(p.querySelector('.ai-person-emoji')||{}).textContent||'',
+          name:(p.querySelector('.ai-person-name')||{}).textContent||'',
+          desc:(p.querySelector('.ai-person-desc')||{}).textContent||''
+        });
+      });
+      aiData.push({title:titleEl?titleEl.textContent:'',text:textEl?textEl.textContent:'',persons:persons});
+    });
+    var cache={};
+    try{cache=JSON.parse(localStorage.getItem('quiz_temperamentos_v1')||'{}');}catch(e){}
+    var payload=JSON.stringify({winner:window._result||cache.winner,secondKey:cache.secondKey||null,scores:cache.scores||{},ai:aiData});
+    var form=document.createElement('form');
+    form.method='POST';form.action='gerar-pdf.php';form.target='_blank';
+    var inp=document.createElement('input');
+    inp.type='hidden';inp.name='payload';inp.value=payload;
+    form.appendChild(inp);document.body.appendChild(form);form.submit();document.body.removeChild(form);
+    btn.textContent='Compartilhar';btn.disabled=false;
+    showToast('Abrindo — salve como PDF na janela que abrir');
+    return;
+  }
+
+  // Mobile: abre bottom sheet com opções
+  btn.textContent='Compartilhar';btn.disabled=false;
+  abrirShareSheet(name);
+}
+
+function abrirShareSheet(name){
+  document.getElementById('shareOverlay').style.display='block';
+  document.getElementById('shareSheet').style.display='block';
+
+  var wppBtn=document.getElementById('btnWpp');
+  var pdfBtn=document.getElementById('btnSharePDF');
+  var msg='🧬 Fiz o Quiz dos Temperamentos e meu resultado foi: *'+name+'*!\n\nDescubra o seu também:\nhttps://akutis.com.br/temperamentos';
+  var svgPDF='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#534AB7" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>';
+  var svgWpp='<svg width="22" height="22" viewBox="0 0 32 32" fill="white"><path d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.2.6 4.3 1.7 6.2L3 29l7.3-1.9c1.8 1 3.8 1.5 5.8 1.5 7 0 12.7-5.7 12.7-12.7S23 3 16 3zm6.5 17.4c-.3.8-1.5 1.5-2.1 1.6-.5.1-1.2.1-1.9-.1-.4-.2-1-.4-1.8-.8-3-1.3-5-4.3-5.2-4.5-.1-.2-1.1-1.5-1.1-2.8s.7-2 .9-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5.2.4.8 1.9.9 2s.1.3 0 .5c-.1.2-.2.3-.3.4l-.5.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.2 1.4 2.5 1.5.3.1.5 0 .7-.2l.9-1.1c.2-.3.4-.2.7-.1l2.3 1.1c.3.1.5.2.5.4.1.2.1.9-.1 1.7z"/></svg>';
+
+  // Desabilita botões enquanto gera PDF
+  wppBtn.innerHTML=svgWpp+' WhatsApp (preparando...)';
+  wppBtn.disabled=true;
+  pdfBtn.innerHTML=svgPDF+' Preparando PDF...';
+  pdfBtn.disabled=true;
+
+  gerarPDFBlob(function(err,pdf){
+    wppBtn.disabled=false;
+    pdfBtn.disabled=false;
+
+    if(err){
+      // Sem PDF: WhatsApp só com texto
+      wppBtn.innerHTML=svgWpp+' WhatsApp';
+      wppBtn.onclick=function(){fecharShareSheet();window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');};
+      pdfBtn.innerHTML=svgPDF+' Compartilhar link';
+      pdfBtn.onclick=function(){fecharShareSheet();if(navigator.share)navigator.share({title:'Meu Temperamento: '+name,url:'https://akutis.com.br/temperamentos'});};
+      return;
+    }
+
+    var fileName='Temperamento-'+name+'.pdf';
+    var blob=pdf.output('blob');
+    var file=new File([blob],fileName,{type:'application/pdf'});
+    var podeArquivo=navigator.share&&navigator.canShare&&navigator.canShare({files:[file]});
+
+    // Botão WhatsApp: share com arquivo (abre sheet do sistema → usuário seleciona WhatsApp)
+    wppBtn.innerHTML=svgWpp+' WhatsApp (com PDF)';
+    if(podeArquivo){
+      wppBtn.onclick=function(){
+        fecharShareSheet();
+        navigator.share({files:[file],title:'Meu Temperamento: '+name,text:msg})
+          .then(function(){showToast('Compartilhado!');})
+          .catch(function(e){
+            // Se cancelou ou falhou, fallback para wa.me texto
+            if(e.name!=='AbortError') window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+          });
+      };
+    } else {
+      // Dispositivo não suporta file share: wa.me com texto
+      wppBtn.innerHTML=svgWpp+' WhatsApp';
+      wppBtn.onclick=function(){fecharShareSheet();window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');};
+    }
+
+    // Botão PDF: download direto
+    pdfBtn.innerHTML=svgPDF+' Baixar PDF';
+    pdfBtn.onclick=function(){fecharShareSheet();pdf.save(fileName);showToast('PDF baixado!');};
+  });
+}
+
+function fecharShareSheet(){
+  document.getElementById('shareOverlay').style.display='none';
+  document.getElementById('shareSheet').style.display='none';
+}
+
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
+}
+
+
+
+// Cache helpers
+var CACHE_KEY='quiz_temperamentos_v1';
+function saveToCache(winner,secondKey,scores,answersData,aiHtml){
+  try{
+    localStorage.setItem(CACHE_KEY,JSON.stringify({
+      winner:winner,secondKey:secondKey,scores:scores,answers:answersData,aiHtml:aiHtml
+    }));
+  }catch(e){}
+}
+function loadFromCache(){
+  try{
+    var raw=localStorage.getItem(CACHE_KEY);
+    if(!raw) return false;
+    var c=JSON.parse(raw);
+    if(!c||!c.winner||!c.aiHtml) return false;
+    // Restaura estado global
+    window._result=c.winner;
+    if(c.answers) answers=c.answers;
+    // Bloco secundário
+    if(c.secondKey&&temps[c.secondKey]){
+      var t2=temps[c.secondKey];
+      var sec=document.getElementById('res-secondary');
+      sec.style.display='block';
+      sec.style.borderLeft='4px solid '+t2.color;
+      document.getElementById('res-sec-name').textContent=t2.emoji+' '+t2.name;
+      document.getElementById('res-sec-name').style.color=t2.color;
+      document.getElementById('res-sec-desc').textContent=t2.desc;
+    }else{
+      document.getElementById('res-secondary').style.display='none';
+    }
+    // Reconstrói resultado estático
+    fillResult(c.winner,c.scores||{});
+    // Restaura conteúdo da IA
+    document.getElementById('aiContent').innerHTML=c.aiHtml;
+    return true;
+  }catch(e){return false;}
+}
+
+// Hero entrance animations
+(function(){
+  var els=document.querySelectorAll('.ha');
+  var delays=[0,300,500,700,900,1100,1200,1300,1400,1500,1600,1700,1800];
+  var idx=0;
+  els.forEach(function(el){
+    var anim=el.getAttribute('data-anim')||'heroFadeIn';
+    var dur=el.getAttribute('data-dur')||'0.6';
+    var delay=delays[idx]||idx*100;
+    idx++;
+    setTimeout(function(){
+      el.style.animation=anim+' '+dur+'s cubic-bezier(.4,0,.2,1) forwards';
+    },delay);
+  });
+})();
+
+document.addEventListener('keydown',function(e){
+  var quiz=document.getElementById('quiz');
+  if(quiz.style.display==='none'||quiz.style.display==='') return;
+  if(e.key==='Enter'){
+    var bn=document.getElementById('btn-next');
+    if(!bn.disabled) bn.click();
+  } else if(e.key==='ArrowDown'||e.key==='ArrowRight'){
+    e.preventDefault();
+    var next=(answers[current]===null)?0:Math.min(answers[current]+1,questions[current].opts.length-1);
+    selectOpt(next);
+  } else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){
+    e.preventDefault();
+    if(answers[current]===null) return;
+    var prev2=Math.max(answers[current]-1,0);
+    selectOpt(prev2);
+  } else if(e.key==='1'||e.key==='2'||e.key==='3'||e.key==='4'){
+    var idx=parseInt(e.key)-1;
+    if(idx<questions[current].opts.length) selectOpt(idx);
+  }
+});
+
+document.getElementById('btnStart').onclick=startQuiz;
+document.getElementById('btn-prev').onclick=prev;
+document.getElementById('btn-next').onclick=next;
+document.getElementById('btnRestart').onclick=restart;
+document.getElementById('btnShare').onclick=share;
+document.getElementById('tag-col').onclick=function(){goToResult('colérico');};
+document.getElementById('tag-san').onclick=function(){goToResult('sanguíneo');};
+document.getElementById('tag-fleu').onclick=function(){goToResult('fleumático');};
+document.getElementById('tag-mel').onclick=function(){goToResult('sentimental');};
+
+// Restaura resultado do cache ao carregar a página
+loadFromCache();
+
+setTimeout(function(){
+  var btn = document.getElementById('btnStart');
+  if (!btn) return;
+  var start = null;
+  var cycleDuration = 1800;
+  var expandDuration = 700;
+  function frame(ts) {
+    if (!start) start = ts;
+    var elapsed = (ts - start) % cycleDuration;
+    if (elapsed < expandDuration) {
+      var t = elapsed / expandDuration;
+      var size = t * 16;
+      var alpha = (1 - t) * 0.55;
+      var scale = 1 + t * 0.04;
+      if (!btn.matches(':hover')) {
+        btn.style.boxShadow = '0 6px 20px rgba(108,99,255,.45), 0 0 0 ' + size.toFixed(1) + 'px rgba(108,99,255,' + alpha.toFixed(2) + ')';
+        btn.style.transform = 'scale(' + scale.toFixed(3) + ')';
+      }
+    } else {
+      if (!btn.matches(':hover')) {
+        btn.style.boxShadow = '0 6px 20px rgba(108,99,255,.45)';
+        btn.style.transform = 'scale(1)';
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}, 200);
+</script>
+</body>
+</html>

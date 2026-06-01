@@ -1,0 +1,19 @@
+# Segredos — nunca versionar
+config.php
+.env
+
+# Banco de dados local
+data/
+db/
+*.db
+*.sqlite
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Livros e PDFs (peso desnecessário no repo)
+livros/
+
+# ZIP
+*.zip
