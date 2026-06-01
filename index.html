@@ -476,7 +476,7 @@ function generateAIResult(key,secondKey,scores,answersData){
   aiLoading.style.display='block';
   aiContent.innerHTML='';
 
-  fetch('claude-proxy.php',{
+  fetch('/api/claude-proxy.php',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({winner:key,secondKey:secondKey,answers:answersData})
@@ -744,7 +744,7 @@ function share(){
     try{cache=JSON.parse(localStorage.getItem('quiz_temperamentos_v2')||'{}');}catch(e){}
     var payload=JSON.stringify({winner:window._result||cache.winner,secondKey:cache.secondKey||null,scores:cache.scores||{},ai:aiData});
     var form=document.createElement('form');
-    form.method='POST';form.action='gerar-pdf.php';form.target='_blank';
+    form.method='POST';form.action='/api/gerar-pdf.php';form.target='_blank';
     var inp=document.createElement('input');
     inp.type='hidden';inp.name='payload';inp.value=payload;
     form.appendChild(inp);document.body.appendChild(form);form.submit();document.body.removeChild(form);

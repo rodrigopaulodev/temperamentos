@@ -1,8 +1,0 @@
-# Bloqueia acesso direto a arquivos sensíveis
-<FilesMatch "^(config\.php|\.env)$">
-    # Apache 2.4+
-    Require all denied
-    # Apache 2.2 (descomente se necessário)
-    # Order Allow,Deny
-    # Deny from all
-</FilesMatch>
