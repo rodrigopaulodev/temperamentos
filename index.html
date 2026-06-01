@@ -508,6 +508,18 @@ function startQuiz(){
   render();
 }
 
+function determineTypeForOption(e,a,r){
+  var ePos=e>0, aPos=a>0, rPos=r>0;
+  if(ePos && aPos && rPos) return 'apaixonado';
+  if(ePos && aPos && !rPos) return 'colérico';
+  if(!ePos && aPos && !rPos) return 'sanguíneo';
+  if(ePos && !aPos && rPos) return 'sentimental';
+  if(!ePos && !aPos && rPos) return 'apático';
+  if(!ePos && aPos && rPos) return 'fleumático';
+  if(ePos && !aPos && !rPos) return 'nervoso';
+  if(!ePos && !aPos && !rPos) return 'amorfo';
+}
+
 function render(){
   var q=questions[current];
   var pct=Math.round(((current+1)/questions.length)*100);
@@ -523,7 +535,7 @@ function render(){
   for(var i=0;i<q.opts.length;i++){
     var b=document.createElement('button');
     var sc=q.opts[i].s;
-    var topKey=Object.keys(sc).reduce(function(a,bb){return sc[a]>=sc[bb]?a:bb;});
+    var topKey=determineTypeForOption(sc.e||0, sc.a||0, sc.r||0);
     var ts=tagStyles[topKey];
     var isSelected=answers[current]===i;
     b.className='opt'+(isSelected?' selected':'');
