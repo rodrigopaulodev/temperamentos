@@ -14,9 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Carrega a chave da API
 require_once __DIR__ . '/config.php';
 
-if (!defined('ANTHROPIC_API_KEY') || ANTHROPIC_API_KEY === 'COLOQUE_SUA_CHAVE_AQUI') {
+if (!defined('CLAUDE_API_KEY') || CLAUDE_API_KEY === 'sua-chave-aqui') {
     http_response_code(500);
-    echo json_encode(['error' => 'Servidor não configurado']);
+    echo json_encode(['error' => 'Servidor não configurado - chave API ausente']);
     exit;
 }
 
@@ -324,7 +324,7 @@ curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_HTTPHEADER     => [
         'Content-Type: application/json',
-        'x-api-key: ' . ANTHROPIC_API_KEY,
+        'x-api-key: ' . CLAUDE_API_KEY,
         'anthropic-version: 2023-06-01',
     ],
     CURLOPT_POSTFIELDS     => $requestBody,
