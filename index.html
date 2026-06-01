@@ -17,9 +17,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 @keyframes heroSlideLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes heroSlideRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes heroBounce{0%{opacity:0;transform:scale(0.5)}60%{transform:scale(1.08)}80%{transform:scale(0.97)}100%{opacity:1;transform:scale(1)}}
-.hero{text-align:center;max-width:560px;padding:1rem 0}
+.hero{text-align:center;max-width:560px;padding:1rem 0;position:relative}
+.hero-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:140px;height:140px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;transition:all .3s ease}
+.hero-overlay:hover{transform:translate(-50%,-50%) scale(1.1);box-shadow:0 0 30px rgba(127,119,221,.4)}
+.hero-overlay-inner{font-size:1.8rem;font-weight:700;color:#fff;text-align:center;opacity:0;transition:opacity .3s ease}
+.hero-overlay:hover .hero-overlay-inner{opacity:1}
 .ha{opacity:0}
-.hero-img{max-width:420px;width:100%;margin-bottom:1rem;border-radius:24px}
+.hero-img{max-width:auto;width:100%;margin-bottom:1rem;border-radius:24px}
 .hero-title{font-family:'Oswald','Impact','Arial Narrow',sans-serif;font-size:2rem;font-weight:700;color:var(--purple-dark);letter-spacing:2px;margin-bottom:.4rem;line-height:1.2}
 .hero-sub{font-size:.95rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
 .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:1.75rem}
@@ -134,7 +138,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <body>
 
 <div class="hero" id="hero">
-  <img src="./logo.png" alt="Personagens dos temperamentos" class="hero-img ha" data-anim="heroScaleIn" data-dur="0.8"/>
+  <img src="./logo-8-2.png" alt="Personagens dos temperamentos" class="hero-img ha" data-anim="heroScaleIn" data-dur="0.8"/>
+  <div class="hero-overlay" id="heroOverlay" onclick="startQuiz()" style="background:rgba(127,119,221,.15);backdrop-filter:blur(4px)">
+    <div class="hero-overlay-inner">Toque aqui</div>
+  </div>
   <div class="hero-title ha" data-anim="heroBounce" data-dur="0.7">QUAL É O SEU<br>TEMPERAMENTO?</div>
   <div class="hero-sub ha" data-anim="heroFadeIn" data-dur="0.6">Descubra qual dos <strong>8 temperamentos</strong> melhor descreve você através de 3 eixos psicológicos.</div>
   <button class="btn-start ha" id="btnStart" data-anim="heroBounce" data-dur="0.6">Começar o quiz</button>
