@@ -11,15 +11,19 @@
   --bg:#ffffff;--text:#2d2b45;--muted:#8885a8;--border:#ebe9f8;
   --radius:20px;--radius-sm:12px;
 }
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem}
 @keyframes heroFadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes heroScaleIn{from{opacity:0;transform:scale(0.85)}to{opacity:1;transform:scale(1)}}
 @keyframes heroSlideLeft{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes heroSlideRight{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes heroBounce{0%{opacity:0;transform:scale(0.5)}60%{transform:scale(1.08)}80%{transform:scale(0.97)}100%{opacity:1;transform:scale(1)}}
-.hero{text-align:center;max-width:560px;padding:1rem 0}
+.hero{text-align:center;max-width:560px;padding:1rem 0;position:relative}
+.hero-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:140px;height:140px;border-radius:50%;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:10;transition:all .3s ease}
+.hero-overlay:hover{transform:translate(-50%,-50%) scale(1.1);box-shadow:0 0 30px rgba(127,119,221,.4)}
+.hero-overlay-inner{font-size:1.8rem;font-weight:700;color:#fff;text-align:center;opacity:0;transition:opacity .3s ease}
+.hero-overlay:hover .hero-overlay-inner{opacity:1}
 .ha{opacity:0}
-.hero-img{max-width:420px;width:100%;margin-bottom:1rem;border-radius:24px}
+.hero-img{max-width:auto;width:100%;margin-bottom:1rem;border-radius:24px}
 .hero-title{font-family:'Oswald','Impact','Arial Narrow',sans-serif;font-size:2rem;font-weight:700;color:var(--purple-dark);letter-spacing:2px;margin-bottom:.4rem;line-height:1.2}
 .hero-sub{font-size:.95rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
 .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:1.75rem}
@@ -105,6 +109,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .ai-error{color:#E24B4A;font-size:.9rem;padding:1rem;background:#fde8e8;border-radius:var(--radius-sm)}
 .chart-section{margin-bottom:2rem}
 .chart-heading{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:1rem}
+.axis-bars{display:flex;flex-direction:column;gap:1.25rem}
+.axis-row{display:grid;grid-template-columns:100px 1fr 50px 130px;gap:1rem;align-items:center;font-size:.9rem}
+@media(max-width:480px){.axis-row{grid-template-columns:80px 1fr 40px;gap:0.75rem}.axis-desc{display:none}}
+.axis-label{font-weight:600;color:var(--text);white-space:nowrap}
+.axis-bar{height:12px;background:var(--border);border-radius:6px;position:relative;overflow:hidden}
+.axis-fill{height:100%;background:var(--purple);border-radius:6px;transition:width .8s cubic-bezier(.4,0,.2,1);width:0}
+.axis-value{font-weight:600;color:var(--purple);text-align:right;white-space:nowrap;min-width:40px}
+.axis-desc{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
 .score-tags{display:flex;flex-direction:column;gap:10px;align-items:stretch}
 .score-tag{padding:7px 16px;border-radius:99px;font-size:12px;font-weight:600;border:1.5px solid;display:flex;align-items:center;gap:10px;position:relative;overflow:hidden}
 .score-tag-bg{position:absolute;top:0;left:0;height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1);z-index:0;opacity:0.35}
@@ -126,26 +138,35 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <body>
 
 <div class="hero" id="hero">
-  <img src="./logo.png" alt="Personagens dos temperamentos" class="hero-img ha" data-anim="heroScaleIn" data-dur="0.8"/>
+  <img src="./logo-8.png" alt="Personagens dos temperamentos" class="hero-img ha" data-anim="heroScaleIn" data-dur="0.8"/>
+  <div class="hero-overlay" id="heroOverlay" onclick="startQuiz()" style="background:rgba(127,119,221,.15);backdrop-filter:blur(4px)">
+    <div class="hero-overlay-inner">Toque aqui</div>
+  </div>
   <div class="hero-title ha" data-anim="heroBounce" data-dur="0.7">QUAL É O SEU<br>TEMPERAMENTO?</div>
-  <div class="hero-sub ha" data-anim="heroFadeIn" data-dur="0.6">Descubra qual dos 4 temperamentos clássicos melhor descreve você.</div>
+  <div class="hero-sub ha" data-anim="heroFadeIn" data-dur="0.6">Descubra qual dos <strong>8 temperamentos</strong> melhor descreve você através de 3 eixos psicológicos.</div>
   <button class="btn-start ha" id="btnStart" data-anim="heroBounce" data-dur="0.6">Começar o quiz</button>
-  <div class="hero-meta ha" data-anim="heroFadeIn" data-dur="0.5">20 perguntas · cerca de 5 minutos</div>
+  <div class="hero-meta ha" data-anim="heroFadeIn" data-dur="0.5">20 perguntas · 3 eixos (Emotividade, Atividade, Ressonância) · cerca de 5 minutos</div>
   <div class="tags" style="margin-top:1.5rem">
-    <span class="tag t-col ha" id="tag-col" data-anim="heroSlideLeft" data-dur="0.4">🔥 Colérico</span>
+    <span class="tag t-col ha" id="tag-col" data-anim="heroSlideLeft" data-dur="0.4">🔥 Apaixonado</span>
+    <span class="tag t-col ha" id="tag-col2" data-anim="heroSlideLeft" data-dur="0.45">⚡ Colérico</span>
     <span class="tag t-san ha" id="tag-san" data-anim="heroFadeIn" data-dur="0.4">☀️ Sanguíneo</span>
-    <span class="tag t-fleu ha" id="tag-fleu" data-anim="heroSlideRight" data-dur="0.4">🌊 Fleumático</span>
-    <span class="tag t-mel ha" id="tag-mel" data-anim="heroFadeIn" data-dur="0.4">🌙 Melancólico</span>
+    <span class="tag t-mel ha" id="tag-mel" data-anim="heroFadeIn" data-dur="0.45">💔 Sentimental</span>
+    <span class="tag t-apa ha" id="tag-apa" data-anim="heroSlideRight" data-dur="0.4">🪨 Apático</span>
+    <span class="tag t-fleu ha" id="tag-fleu" data-anim="heroSlideRight" data-dur="0.45">🌊 Fleumático</span>
+    <span class="tag t-ner ha" id="tag-ner" data-anim="heroFadeIn" data-dur="0.5">🎨 Nervoso</span>
+    <span class="tag t-amo ha" id="tag-amo" data-anim="heroFadeIn" data-dur="0.55">💨 Amorfo</span>
   </div>
   <div class="refs-books ha" data-anim="heroFadeIn" data-dur="0.7">
-    <div class="refs-title">Referências bibliográficas</div>
+    <div class="refs-title">Sistema Heymans-Le Senne com referências</div>
     <div class="refs-list">
-      <span>Padre Paulo Ricardo · <em>Os Quatro Temperamentos</em></span>
+      <span><em>Teste dos 8 Temperamentos</em> · Heymans & Wiersma</span>
+      <span>Pe. José Antonio Gonzalez · <em>O Conhecimento de Si Mesmo</em></span>
+      <span>Pe. Antonio Royo Marín · <em>A Vida de Oração</em></span>
+      <span>Padre Paulo Ricardo · <em>Os Quatro Temperamentos (clássicos)</em></span>
       <span>Murilo Frizanco · <em>Os 4 Temperamentos</em></span>
-      <span>Mestre Gabriel Amorim · <em>Decifrando os Temperamentos Humanos</em></span>
     </div>
   </div>
-  <div class="dev-credit">Desenvolvido por <strong>Rodrigo Paulo</strong></div>
+  <div class="dev-credit">Desenvolvido por <strong>Rodrigo Paulo</strong> com IA</div>
 </div>
 
 <div class="quiz-wrap" id="quiz">
@@ -197,8 +218,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
   <div class="divider"></div>
   <div class="chart-section">
-    <div class="chart-heading">Todos os temperamentos</div>
-    <div class="score-tags" id="scoreTags"></div>
+    <div class="chart-heading">Seu perfil nos 3 eixos</div>
+    <div class="axis-container" id="axisContainer"></div>
   </div>
   <div class="result-actions">
     <button class="btn-restart" id="btnRestart">↺ Refazer</button>
@@ -211,6 +232,105 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- Modal Limite Atingido -->
+<style>
+#limiteOverlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(30,20,60,.6);backdrop-filter:blur(4px);
+  overflow-y:auto;
+  /* Flexbox para centralizar o modal dentro do overlay */
+  padding:16px;
+  align-items:flex-start;
+  justify-content:center;
+}
+#limiteModal{
+  position:relative;z-index:1001;background:#fff;border-radius:24px;
+  text-align:center;
+  width:100%;max-width:420px;
+  margin:auto;
+  padding:32px 24px 24px;
+  box-shadow:0 24px 80px rgba(80,60,180,.25);
+  opacity:0;transform:scale(0.92);
+  transition:opacity .3s ease,transform .3s ease;
+}
+#limiteModal.ativo{opacity:1;transform:scale(1)}
+@media(max-width:480px){
+  #limiteOverlay{padding:0;align-items:flex-end}
+  #limiteModal{
+    border-radius:24px 24px 0 0;
+    max-width:100%;
+    margin:0;
+    padding:20px 18px 32px;
+    transform:translateY(40px);
+  }
+  #limiteModal.ativo{transform:translateY(0)}
+}
+.lm-rocket{width:88px;height:88px;background:linear-gradient(135deg,#e8e4ff,#d0c8ff);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2.6rem;box-shadow:0 8px 24px rgba(127,119,221,.22);flex-shrink:0}
+.lm-title{font-size:1.75rem;font-weight:800;margin-bottom:10px;background:linear-gradient(90deg,#a855f7,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lm-bold{font-size:.93rem;font-weight:700;color:#2d2b45;margin-bottom:6px}
+.lm-desc{font-size:.84rem;color:#8885a8;line-height:1.6;margin-bottom:18px}
+.lm-benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.lm-benefit{border-radius:12px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.lm-benefit-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.lm-benefit-title{font-size:.74rem;font-weight:700;color:#2d2b45;line-height:1.2}
+.lm-benefit-sub{font-size:.68rem;color:#8885a8}
+.lm-btn-pix{width:100%;padding:15px;border:none;border-radius:14px;font-size:.97rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;transition:.15s;cursor:not-allowed;background:#c4c0e8;color:#fff;opacity:.7}
+.lm-btn-voltar{width:100%;padding:13px;background:#fff;color:#6366f1;border:2px solid #e0e7ff;border-radius:14px;font-size:.95rem;font-weight:600;cursor:pointer}
+.lm-footer{display:flex;align-items:flex-start;justify-content:center;gap:6px;margin-top:12px;font-size:.74rem;color:#8885a8;line-height:1.5}
+.lm-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:#f0effc;border:none;cursor:pointer;font-size:1rem;color:#8885a8;display:flex;align-items:center;justify-content:center}
+</style>
+
+<div id="limiteOverlay" onclick="fecharLimiteModal()">
+<div id="limiteModal" onclick="event.stopPropagation()">
+  <button class="lm-close" onclick="fecharLimiteModal()">✕</button>
+
+  <div style="position:absolute;top:20px;left:32px;font-size:1.1rem;pointer-events:none">✨</div>
+  <div style="position:absolute;top:52px;left:18px;font-size:.75rem;pointer-events:none">⭐</div>
+  <div style="position:absolute;top:20px;right:56px;font-size:.95rem;pointer-events:none">✨</div>
+
+  <div class="lm-rocket">🚀</div>
+
+  <div class="lm-title">Quase lá!</div>
+
+  <p class="lm-bold">Você atingiu o limite de resultados disponíveis gratuitamente.</p>
+  <p class="lm-desc">Para continuar explorando suas análises e receber novos insights personalizados, faça uma contribuição de apenas <strong style="color:#6366f1">R$ 1,00</strong>.<br><br>Esse valor ajuda a cobrir os custos de processamento da IA e a manter a plataforma disponível para todos.</p>
+
+  <div class="lm-benefits">
+    <div class="lm-benefit" style="background:#f5f3ff">
+      <div class="lm-benefit-icon" style="background:#ede9fe">🔒</div>
+      <div class="lm-benefit-title">Pagamento seguro</div>
+      <div class="lm-benefit-sub">via Pix</div>
+    </div>
+    <div class="lm-benefit" style="background:#f0fdf4">
+      <div class="lm-benefit-icon" style="background:#dcfce7">⚡</div>
+      <div class="lm-benefit-title">Liberação</div>
+      <div class="lm-benefit-sub">instantânea</div>
+    </div>
+    <div class="lm-benefit" style="background:#eff6ff">
+      <div class="lm-benefit-icon" style="background:#dbeafe">📊</div>
+      <div class="lm-benefit-title">Continue de</div>
+      <div class="lm-benefit-sub">onde parou</div>
+    </div>
+  </div>
+
+  <!-- Botão Pix desabilitado -->
+  <div style="position:relative;margin-bottom:10px">
+    <button class="lm-btn-pix" disabled style="margin-bottom:0">
+      <svg width="20" height="20" viewBox="0 0 512 512" fill="white" style="opacity:.6;flex-shrink:0"><path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-21.997l78.431-78.431c5.074-5.074 13.694-5.06 18.752 0l78.762 78.762c14.192 14.19 33.064 21.997 53.12 21.997h15.697l-99.387 99.378c-29.454 29.461-77.224 29.461-106.687 0L105 391.19h7.57zm283.128-270.384c-20.056 0-38.928 7.808-53.12 21.997l-78.762 78.754c-5.18 5.18-13.564 5.19-18.752 0l-78.43-78.423c-14.193-14.19-33.065-21.997-53.121-21.997H104.9l99.487-99.478c29.463-29.461 77.233-29.461 106.687 0l99.337 99.147h-14.709z"/></svg>
+      Pagar com Pix · <strong>R$ 1,00</strong>
+    </button>
+    <span style="position:absolute;top:-10px;right:10px;background:#a78bfa;color:#fff;font-size:.68rem;font-weight:700;padding:3px 10px;border-radius:99px;letter-spacing:.03em">Em breve</span>
+  </div>
+
+  <button class="lm-btn-voltar" onclick="fecharLimiteModal()">← Voltar</button>
+
+  <div class="lm-footer">
+    <span>🔒</span>
+    <span>Ao realizar o pagamento, sua análise será <strong style="color:#6366f1">liberada automaticamente</strong> em poucos segundos.</span>
+  </div>
+</div><!-- /limiteModal -->
+</div><!-- /limiteOverlay -->
 
 <!-- Bottom sheet de compartilhamento (mobile) -->
 <div id="shareOverlay" onclick="fecharShareSheet()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:998"></div>
@@ -230,141 +350,148 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 
 <script>
 var questions=[
-  {text:"Diante de um problema urgente, minha primeira reação é:",obs:"A velocidade de reação diferencia os temperamentos ativos (colérico/sanguíneo) dos inativos (melancólico/fleumático) — Eysenck",opts:[
-    {t:"Agir imediatamente — pensar depois",s:{colérico:3,sanguíneo:1}},
-    {t:"Analisar com calma todos os ângulos antes de mover",s:{fleumático:3,sentimental:1}},
-    {t:"Sentir o peso da situação e refletir longamente",s:{sentimental:3,fleumático:1}},
-    {t:"Esperar — raramente sinto urgência",s:{fleumático:3,sanguíneo:1}}
+  {text:"Diante de um problema urgente, minha primeira reação é:",obs:"🎯 Eixo Atividade (A): coléricos e sanguíneos agem rápido; fleumáticos e sentimentais analisam primeiro — Heymans-Wiersma",opts:[
+    {t:"Agir imediatamente — pensar depois",s:{e:0,a:1,r:-1}},
+    {t:"Analisar com calma todos os ângulos antes de mover",s:{e:0,a:-1,r:0}},
+    {t:"Sentir o peso da situação e refletir longamente",s:{e:1,a:-1,r:1}},
+    {t:"Esperar — raramente sinto urgência",s:{e:-1,a:-1,r:0}}
   ]},
-  {text:"Em grupos ou reuniões, eu naturalmente:",obs:"Eixo introversão/extroversão de Eysenck — base estrutural da teoria dos temperamentos",opts:[
-    {t:"Assumo a liderança e direciono o rumo",s:{colérico:3,sanguíneo:1}},
-    {t:"Animo o ambiente e falo bastante",s:{sanguíneo:3,colérico:1}},
-    {t:"Ouço mais do que falo, observo as pessoas",s:{fleumático:2,sentimental:2}},
-    {t:"Fico quieto — prefiro passar despercebido",s:{sentimental:3,fleumático:1}}
+  {text:"Em grupos ou reuniões, eu naturalmente:",obs:"💬 Eixo Emotividade (E) + Atividade (A): coléricos lideram, sentimentais observam — Pe. Gonzalez",opts:[
+    {t:"Assumo a liderança e direciono o rumo",s:{e:1,a:1,r:-1}},
+    {t:"Animo o ambiente e falo bastante",s:{e:-1,a:1,r:-1}},
+    {t:"Ouço mais do que falo, observo as pessoas",s:{e:-1,a:-1,r:0}},
+    {t:"Fico quieto — prefiro passar despercebido",s:{e:1,a:-1,r:0}}
   ]},
-  {text:"Minha vida emocional é:",obs:"Eysenck: colérico e melancólico são emocionais; sanguíneo e fleumático têm maior estabilidade emocional",opts:[
-    {t:"Intensa e expressada abertamente",s:{colérico:2,sanguíneo:2}},
-    {t:"Profunda, mas guardada para mim",s:{sentimental:3,fleumático:1}},
-    {t:"Estável — me abalo raramente",s:{fleumático:3,sanguíneo:1}},
-    {t:"Variável e comunicativa",s:{sanguíneo:3,colérico:1}}
+  {text:"Minha vida emocional é:",obs:"💓 Eixo Emotividade (E): coléricos expressam abertamente; sentimentais guardam para si — Heymans",opts:[
+    {t:"Intensa e expressada abertamente",s:{e:1,a:0,r:-1}},
+    {t:"Profunda, mas guardada para mim",s:{e:1,a:-1,r:1}},
+    {t:"Estável — me abalo raramente",s:{e:-1,a:0,r:-1}},
+    {t:"Variável e comunicativa",s:{e:-1,a:1,r:-1}}
   ]},
-  {text:"Nas minhas horas livres, costumo:",obs:"Frizanco: o que fazemos espontaneamente no tempo livre revela o temperamento mais profundo",opts:[
-    {t:"Fazer algo produtivo — descansar sem fazer nada me incomoda",s:{colérico:3,sanguíneo:1}},
-    {t:"Estar com pessoas, sair, conversar e me divertir",s:{sanguíneo:3,colérico:1}},
-    {t:"Ler, criar, refletir ou ficar em silêncio comigo mesmo",s:{sentimental:3,fleumático:1}},
-    {t:"Descansar de verdade — sem culpa e sem pressa de fazer algo",s:{fleumático:3,sentimental:1}}
+  {text:"Nas minhas horas livres, costumo:",obs:"⏰ Eixo Atividade (A): produtivos vs. descansadores — fundamental em Heymans para distinguir tipos",opts:[
+    {t:"Fazer algo produtivo — descansar sem fazer nada me incomoda",s:{e:0,a:1,r:0}},
+    {t:"Estar com pessoas, sair, conversar e me divertir",s:{e:-1,a:1,r:-1}},
+    {t:"Ler, criar, refletir ou ficar em silêncio comigo mesmo",s:{e:1,a:-1,r:1}},
+    {t:"Descansar de verdade — sem culpa e sem pressa de fazer algo",s:{e:-1,a:-1,r:0}}
   ]},
-  {text:"Minha relação com novidades e mudanças é:",obs:"Sanguíneo abraça novidades por sociabilidade; colérico por controle — motivações opostas para atitudes parecidas",opts:[
-    {t:"Adoro novidades — a rotina me entedia",s:{sanguíneo:3,colérico:1}},
-    {t:"Prefiro estabilidade e previsibilidade",s:{fleumático:3,sentimental:1}},
-    {t:"Processo internamente antes de aceitar",s:{sentimental:3,fleumático:1}},
-    {t:"Gosto quando as mudanças partem de mim",s:{colérico:3,sanguíneo:1}}
+  {text:"Minha relação com novidades e mudanças é:",obs:"🔄 Eixo Atividade (A) + Ressonância (R): primários buscam novidade; secundários precisam processá-la — Pe. Gonzalez",opts:[
+    {t:"Adoro novidades — a rotina me entedia",s:{e:-1,a:1,r:-1}},
+    {t:"Prefiro estabilidade e previsibilidade",s:{e:-1,a:-1,r:1}},
+    {t:"Processo internamente antes de aceitar",s:{e:1,a:-1,r:1}},
+    {t:"Gosto quando as mudanças partem de mim",s:{e:1,a:1,r:-1}}
   ]},
-  {text:"Nos meus relacionamentos pessoais, tenho:",obs:"Frizanco: qualidade vs. quantidade de vínculos é um dos marcadores mais confiáveis do temperamento",opts:[
-    {t:"Muitos amigos, conexões fáceis mas nem sempre profundas",s:{sanguíneo:3,colérico:1}},
-    {t:"Poucos vínculos, mas muito profundos e leais",s:{sentimental:3,fleumático:1}},
-    {t:"Relações cordiais mas sem grande intimidade",s:{fleumático:3,sanguíneo:1}},
-    {t:"Relações onde naturalmente lidero ou organizo",s:{colérico:3,sentimental:1}}
+  {text:"Nos meus relacionamentos pessoais, tenho:",obs:"🤝 Eixo Ressonância (R): primários muitos amigos superficiais; secundários poucos amigos profundos — Heymans",opts:[
+    {t:"Muitos amigos, conexões fáceis mas nem sempre profundas",s:{e:-1,a:1,r:-1}},
+    {t:"Poucos vínculos, mas muito profundos e leais",s:{e:1,a:-1,r:1}},
+    {t:"Relações cordiais mas sem grande intimidade",s:{e:-1,a:-1,r:0}},
+    {t:"Relações onde naturalmente lidero ou organizo",s:{e:1,a:1,r:0}}
   ]},
-  {text:"Quando fico com raiva ou sinto injustiça:",obs:"Pe. Paulo Ricardo: o colérico explode e esquece; o melancólico guarda para sempre — diferença fundamental entre os dois",opts:[
-    {t:"Explodo rapidamente — mas passo logo",s:{colérico:3,sanguíneo:1}},
-    {t:"Guardo silenciosamente por muito tempo",s:{sentimental:3,fleumático:1}},
-    {t:"Raramente me irrito de forma séria",s:{fleumático:3,sanguíneo:1}},
-    {t:"Fico desconfortável mas esqueço rápido",s:{sanguíneo:3,fleumático:1}}
+  {text:"Quando fico com raiva ou sinto injustiça:",obs:"😤 Eixo Ressonância (R): coléricos explodem rápido (P); melancólicos guardam (S) — Pe. Paulo Ricardo",opts:[
+    {t:"Explodo rapidamente — mas passo logo",s:{e:1,a:1,r:-1}},
+    {t:"Guardo silenciosamente por muito tempo",s:{e:1,a:-1,r:1}},
+    {t:"Raramente me irrito de forma séria",s:{e:-1,a:-1,r:0}},
+    {t:"Fico desconfortável mas esqueço rápido",s:{e:-1,a:1,r:-1}}
   ]},
-  {text:"Quando sou criticado ou humilhado:",obs:"Critério diagnóstico central do Pe. Paulo Ricardo — a resposta à humilhação revela o temperamento com precisão",opts:[
-    {t:"Fico indignado — sinto que é injusto e reajo, mesmo que internamente",s:{colérico:3,sentimental:1}},
-    {t:"Sinto vergonha ou constrangimento, mas supero e esqueço em pouco tempo",s:{sanguíneo:3,colérico:1}},
-    {t:"Sinto profundamente e carrego isso por muito tempo — às vezes não esqueço",s:{sentimental:3,fleumático:1}},
-    {t:"Aceito com tranquilidade real — não fico agitado por dentro com isso",s:{fleumático:3,sanguíneo:1}}
+  {text:"Quando sou criticado ou humilhado:",obs:"😔 Eixo Ressonância (R) + Emotividade (E): critério diagnóstico central de Pe. Paulo Ricardo — resposta emocional duradoura",opts:[
+    {t:"Fico indignado — sinto que é injusto e reajo, mesmo que internamente",s:{e:1,a:1,r:1}},
+    {t:"Sinto vergonha ou constrangimento, mas supero e esqueço em pouco tempo",s:{e:1,a:1,r:-1}},
+    {t:"Sinto profundamente e carrego isso por muito tempo — às vezes não esqueço",s:{e:1,a:-1,r:1}},
+    {t:"Aceito com tranquilidade real — não fico agitado por dentro com isso",s:{e:-1,a:-1,r:0}}
   ]},
-  {text:"Ao tomar uma decisão importante:",obs:"Colérico decide por instinto; melancólico analisa em excesso; fleumático evita decidir sozinho — Frizanco",opts:[
-    {t:"Decido rápido e confio no instinto",s:{colérico:3,sanguíneo:1}},
-    {t:"Analiso todos os detalhes antes de decidir",s:{sentimental:3,fleumático:1}},
-    {t:"Fico em dúvida e prefiro não decidir sozinho",s:{fleumático:3,sentimental:1}},
-    {t:"Decido com base no que me anima mais",s:{sanguíneo:3,colérico:1}}
+  {text:"Ao tomar uma decisão importante:",obs:"⚡ Eixo Atividade (A): ativos decidem rápido por instinto; inativos analisam e hesitam — Frizanco",opts:[
+    {t:"Decido rápido e confio no instinto",s:{e:0,a:1,r:-1}},
+    {t:"Analiso todos os detalhes antes de decidir",s:{e:-1,a:-1,r:1}},
+    {t:"Fico em dúvida e prefiro não decidir sozinho",s:{e:-1,a:-1,r:1}},
+    {t:"Decido com base no que me anima mais",s:{e:1,a:1,r:-1}}
   ]},
-  {text:"Minha tendência perante fracassos é:",obs:"Sanguíneo supera rápido e segue em frente; melancólico carrega o fracasso por muito tempo — extremos opostos",opts:[
-    {t:"Supero rápido e sigo em frente",s:{sanguíneo:3,colérico:1}},
-    {t:"Sinto fundo por bastante tempo — levo para o coração",s:{sentimental:3,fleumático:1}},
-    {t:"Aceito com tranquilidade sem grande drama",s:{fleumático:3,sanguíneo:1}},
-    {t:"Fico irritado e busco um culpado ou solução",s:{colérico:3,sentimental:1}}
+  {text:"Minha tendência perante fracassos é:",obs:"💔 Eixo Ressonância (R) + Emotividade (E): sanguíneos superam (P); melancólicos carregam (S) — extremos opostos",opts:[
+    {t:"Supero rápido e sigo em frente",s:{e:-1,a:1,r:-1}},
+    {t:"Sinto fundo por bastante tempo — levo para o coração",s:{e:1,a:-1,r:1}},
+    {t:"Aceito com tranquilidade sem grande drama",s:{e:-1,a:-1,r:0}},
+    {t:"Fico irritado e busco um culpado ou solução",s:{e:1,a:1,r:-1}}
   ]},
-  {text:"Em situações de pressão ou crise:",obs:"Frizanco: o colérico produz melhor sob pressão; o fleumático mantém calma metódica — eficazes de formas opostas",opts:[
-    {t:"Produzo melhor — a pressão me motiva",s:{colérico:3,sanguíneo:1}},
-    {t:"Mantenho a calma e trabalho metodicamente",s:{fleumático:3,sentimental:1}},
-    {t:"Me fecho e processo tudo internamente",s:{sentimental:3,fleumático:1}},
-    {t:"Busco apoio e falo sobre o que estou sentindo",s:{sanguíneo:3,colérico:1}}
+  {text:"Em situações de pressão ou crise:",obs:"🔥 Eixo Atividade (A) + Emotividade (E): coléricos produzem sob pressão; fleumáticos mantêm calma — Frizanco",opts:[
+    {t:"Produzo melhor — a pressão me motiva",s:{e:0,a:1,r:-1}},
+    {t:"Mantenho a calma e trabalho metodicamente",s:{e:-1,a:-1,r:0}},
+    {t:"Me fecho e processo tudo internamente",s:{e:1,a:-1,r:1}},
+    {t:"Busco apoio e falo sobre o que estou sentindo",s:{e:1,a:1,r:-1}}
   ]},
-  {text:"Minha mente costuma:",obs:"Pe. Paulo Ricardo: a ruminação incontrolável da imaginação é o defeito central do melancólico — e o ponto a mortificar",opts:[
-    {t:"Estar focada em objetivos, metas e próximos passos",s:{colérico:3,fleumático:1}},
-    {t:"Pular de assunto em assunto — cheia de ideias e planos dispersos",s:{sanguíneo:3,colérico:1}},
-    {t:"Revisitar o passado, criar cenários e ruminar situações — difícil de desligar",s:{sentimental:3,sanguíneo:1}},
-    {t:"Funcionar de forma prática e linear — sem excessos de fantasia ou ruminação",s:{fleumático:3,sentimental:1}}
+  {text:"Minha mente costuma:",obs:"🧠 Eixo Emotividade (E) + Ressonância (R): ruminação melancólica (E+S); dispersão sanguínea (E-P) — Pe. Paulo Ricardo",opts:[
+    {t:"Estar focada em objetivos, metas e próximos passos",s:{e:-1,a:1,r:-1}},
+    {t:"Pular de assunto em assunto — cheia de ideias e planos dispersos",s:{e:-1,a:1,r:-1}},
+    {t:"Revisitar o passado, criar cenários e ruminar situações — difícil de desligar",s:{e:1,a:-1,r:1}},
+    {t:"Funcionar de forma prática e linear — sem excessos de fantasia ou ruminação",s:{e:-1,a:-1,r:0}}
   ]},
-  {text:"Minha relação com regras e autoridade:",obs:"Colérico questiona por orgulho; fleumático aceita por harmonia — motivações diferentes para comportamentos aparentemente parecidos",opts:[
-    {t:"Questiono — prefiro liderar a ser liderado",s:{colérico:3,sanguíneo:1}},
-    {t:"Sigo sem problemas — prefiro harmonia",s:{fleumático:3,sanguíneo:1}},
-    {t:"Respeito, mas avalio criticamente se faz sentido",s:{sentimental:3,colérico:1}},
-    {t:"Sigo quando conveniente, questiono quando não",s:{sanguíneo:3,fleumático:1}}
+  {text:"Minha relação com regras e autoridade:",obs:"👑 Eixo Emotividade (E) + Atividade (A): coléricos questionam por orgulho; fleumáticos aceitam por harmonia — Pe. Gonzalez",opts:[
+    {t:"Questiono — prefiro liderar a ser liderado",s:{e:1,a:1,r:-1}},
+    {t:"Sigo sem problemas — prefiro harmonia",s:{e:-1,a:-1,r:0}},
+    {t:"Respeito, mas avalio criticamente se faz sentido",s:{e:1,a:-1,r:0}},
+    {t:"Sigo quando conveniente, questiono quando não",s:{e:-1,a:1,r:-1}}
   ]},
-  {text:"Minha vida interior é:",obs:"Melancólico vive intensamente para dentro; sanguíneo vive para fora — extremos opostos do eixo de introversão de Eysenck",opts:[
-    {t:"Rica e intensa — vivo muito dentro de mim",s:{sentimental:3,fleumático:1}},
-    {t:"Voltada para o externo — o mundo me interessa mais",s:{sanguíneo:2,colérico:2}},
-    {t:"Estável e prática — não muito filosófica",s:{fleumático:3,sanguíneo:1}},
-    {t:"Agitada por objetivos e planos",s:{colérico:3,sentimental:1}}
+  {text:"Minha vida interior é:",obs:"🌊 Eixo Emotividade (E) + Atividade (A): melancólicos vivem intensamente para dentro; sanguíneos para fora — Eysenck",opts:[
+    {t:"Rica e intensa — vivo muito dentro de mim",s:{e:1,a:-1,r:1}},
+    {t:"Voltada para o externo — o mundo me interessa mais",s:{e:-1,a:1,r:-1}},
+    {t:"Estável e prática — não muito filosófica",s:{e:-1,a:-1,r:0}},
+    {t:"Agitada por objetivos e planos",s:{e:0,a:1,r:-1}}
   ]},
-  {text:"Como me relaciono com o tempo:",obs:"Hipócrates: sanguíneo vive o presente; melancólico prende-se ao passado; colérico planeja o futuro; fleumático segue o ritmo",opts:[
-    {t:"Vivo o presente — o futuro não me preocupa muito",s:{sanguíneo:3,fleumático:1}},
-    {t:"Planejo cuidadosamente e olho para o futuro",s:{colérico:3,fleumático:1}},
-    {t:"Fico preso ao passado — sinto muita nostalgia",s:{sentimental:3,sanguíneo:1}},
-    {t:"Vivo no ritmo — nem pressa nem atraso",s:{fleumático:3,sentimental:1}}
+  {text:"Como me relaciono com o tempo:",obs:"⏳ Eixo Ressonância (R): primários vivem presente; secundários preso ao passado — Hipócrates",opts:[
+    {t:"Vivo o presente — o futuro não me preocupa muito",s:{e:-1,a:1,r:-1}},
+    {t:"Planejo cuidadosamente e olho para o futuro",s:{e:0,a:1,r:0}},
+    {t:"Fico preso ao passado — sinto muita nostalgia",s:{e:1,a:-1,r:1}},
+    {t:"Vivo no ritmo — nem pressa nem atraso",s:{e:-1,a:-1,r:0}}
   ]},
-  {text:"Minha maior motivação na vida é:",obs:"Frizanco: legado, prazer, paz ou significado — a motivação central é o motor que move cada temperamento",opts:[
-    {t:"Alcançar metas e deixar um legado",s:{colérico:3,sentimental:1}},
-    {t:"Relacionamentos e experiências prazerosas",s:{sanguíneo:3,fleumático:1}},
-    {t:"Estabilidade, conforto e paz",s:{fleumático:3,sanguíneo:1}},
-    {t:"Significado profundo e conexão verdadeira",s:{sentimental:3,colérico:1}}
+  {text:"Minha maior motivação na vida é:",obs:"🎯 Eixo Atividade (A): ativos buscam legado/metas; inativos buscam paz/significado — Frizanco",opts:[
+    {t:"Alcançar metas e deixar um legado",s:{e:0,a:1,r:-1}},
+    {t:"Relacionamentos e experiências prazerosas",s:{e:-1,a:1,r:-1}},
+    {t:"Estabilidade, conforto e paz",s:{e:-1,a:-1,r:0}},
+    {t:"Significado profundo e conexão verdadeira",s:{e:1,a:-1,r:1}}
   ]},
-  {text:"Quando alguém me magoa emocionalmente:",obs:"Pe. Paulo Ricardo: colérico confronta e supera rápido; melancólico pode guardar mágoa para sempre — diferenciador muito forte",opts:[
-    {t:"Confronto na hora e supero rápido",s:{colérico:3,sanguíneo:1}},
-    {t:"Guardo mágoa por muito tempo, às vezes para sempre",s:{sentimental:3,fleumático:1}},
-    {t:"Fico chateado por um tempo e depois esqueço",s:{sanguíneo:3,colérico:1}},
-    {t:"Aceito e sigo em frente sem grande drama",s:{fleumático:3,sentimental:1}}
+  {text:"Quando alguém me magoa emocionalmente:",obs:"❤️ Eixo Ressonância (R): coléricos confrontam e superam (P); melancólicos guardam para sempre (S) — Pe. Paulo Ricardo",opts:[
+    {t:"Confronto na hora e supero rápido",s:{e:1,a:1,r:-1}},
+    {t:"Guardo mágoa por muito tempo, às vezes para sempre",s:{e:1,a:-1,r:1}},
+    {t:"Fico chateado por um tempo e depois esqueço",s:{e:-1,a:1,r:-1}},
+    {t:"Aceito e sigo em frente sem grande drama",s:{e:-1,a:-1,r:0}}
   ]},
-  {text:"Em relação a projetos e compromissos assumidos, eu:",obs:"Sanguíneo começa com entusiasmo e raramente conclui; fleumático começa devagar mas é o mais confiável até o fim — Frizanco",opts:[
-    {t:"Começo com força e costumo terminar — não gosto de deixar coisas pela metade",s:{colérico:3,sentimental:1}},
-    {t:"Começo com entusiasmo mas frequentemente não concluo — perco o interesse",s:{sanguíneo:3,fleumático:1}},
-    {t:"Planejo muito, executo devagar mas com qualidade e atenção aos detalhes",s:{sentimental:3,colérico:1}},
-    {t:"Começo devagar mas sou consistente — raramente começo e raramente desisto",s:{fleumático:3,sanguíneo:1}}
+  {text:"Em relação a projetos e compromissos assumidos, eu:",obs:"📋 Eixo Atividade (A) + Ressonância (R): sanguíneos começam entusiasmados mas não terminam (A+P); fleumáticos constantes (A-S) — Frizanco",opts:[
+    {t:"Começo com força e costumo terminar — não gosto de deixar coisas pela metade",s:{e:0,a:1,r:0}},
+    {t:"Começo com entusiasmo mas frequentemente não concluo — perdo o interesse",s:{e:-1,a:1,r:-1}},
+    {t:"Planejo muito, executo devagar mas com qualidade e atenção aos detalhes",s:{e:0,a:-1,r:1}},
+    {t:"Começo devagar mas sou consistente — raramente começo e raramente desisto",s:{e:-1,a:-1,r:1}}
   ]},
-  {text:"Se eu for honesto, minha tendência negativa mais recorrente é:",obs:"Pe. Paulo Ricardo: ira/orgulho (colérico), inconstância/vaidade (sanguíneo), tristeza/rancor (melancólico), acídia/preguiça (fleumático)",opts:[
-    {t:"Impaciência, irritação fácil ou orgulho — quero que as coisas sejam do meu jeito",s:{colérico:3,sentimental:1}},
-    {t:"Inconstância, vaidade ou necessidade de atenção e aprovação dos outros",s:{sanguíneo:3,colérico:1}},
-    {t:"Tristeza, rancor ou autocrítica que não me deixa em paz",s:{sentimental:3,fleumático:1}},
-    {t:"Preguiça, apatia ou procrastinação — empurro as coisas com a barriga",s:{fleumático:3,sanguíneo:1}}
+  {text:"Se eu for honesto, minha tendência negativa mais recorrente é:",obs:"😞 Eixo Emotividade (E) + Atividade (A): defeito dominante em Pe. Gonzalez — ira (E+A), inconstância (nE+A), tristeza (E+nA), acídia (nE+nA)",opts:[
+    {t:"Impaciência, irritação fácil ou orgulho — quero que as coisas sejam do meu jeito",s:{e:1,a:1,r:0}},
+    {t:"Inconstância, vaidade ou necessidade de atenção e aprovação dos outros",s:{e:-1,a:1,r:-1}},
+    {t:"Tristeza, rancor ou autocrítica que não me deixa em paz",s:{e:1,a:-1,r:1}},
+    {t:"Preguiça, apatia ou procrastinação — empurro as coisas com a barriga",s:{e:-1,a:-1,r:-1}}
   ]},
-  {text:"Ao final de um dia intenso, eu:",obs:"Como recarregamos energia revela introversão vs. extroversão — silêncio (introvertido) ou contato social (extrovertido) — Eysenck",opts:[
-    {t:"Ainda tenho energia e quero socializar",s:{sanguíneo:3,colérico:1}},
-    {t:"Preciso de silêncio para processar e me recarregar",s:{sentimental:3,fleumático:1}},
-    {t:"Me sinto tranquilo e continuo no mesmo ritmo",s:{fleumático:3,sanguíneo:1}},
-    {t:"Fico satisfeito se fui produtivo",s:{colérico:3,sentimental:1}}
+  {text:"Ao final de um dia intenso, eu:",obs:"🔋 Eixo Emotividade (E) + Atividade (A): introvertidos recarregam em silêncio (E+nA); extrovertidos com socialização (nE+A) — Eysenck",opts:[
+    {t:"Ainda tenho energia e quero socializar",s:{e:-1,a:1,r:-1}},
+    {t:"Preciso de silêncio para processar e me recarregar",s:{e:1,a:-1,r:0}},
+    {t:"Me sinto tranquilo e continuo no mesmo ritmo",s:{e:-1,a:-1,r:0}},
+    {t:"Fico satisfeito se fui produtivo",s:{e:0,a:1,r:-1}}
   ]}
 ];
 
-var temps={
-  colérico:{name:"Colérico",emoji:"🔥",badge:"Extrovertido · Emocional · Ativo",desc:"Você é movido pela ação. Tem liderança natural, energia inesgotável e visão clara de onde quer chegar. Humor hipocrático: bílis amarela. Defeito dominante: ira e orgulho. Virtude a cultivar: mansidão. Santos com este temperamento: São Paulo Apóstolo, Santa Teresa d'Ávila.",pos:["Liderança natural","Determinação e foco","Alta energia e proatividade","Coragem para decidir","Visão estratégica"],neg:["Impaciência com os outros","Dificuldade em ouvir","Tendência ao autoritarismo","Explosivo em conflitos","Orgulho excessivo"],color:"#E24B4A"},
-  sanguíneo:{name:"Sanguíneo",emoji:"☀️",badge:"Extrovertido · Não-Emocional · Ativo",desc:"Você é alegria em movimento. Faz amigos com facilidade, traz vida a qualquer ambiente e enfrenta tudo com otimismo genuíno. Humor hipocrático: sangue. Defeito dominante: inconstância e vaidade. Virtude a cultivar: perseverança e vida interior. Santos com este temperamento: São Pedro Apóstolo, São Filipe Néri.",pos:["Otimismo contagiante","Facilidade de comunicação","Adaptabilidade e flexibilidade","Cria laços com facilidade","Generosidade espontânea"],neg:["Superficialidade nos vínculos","Dificuldade em manter foco","Inconstância emocional","Promete mais do que cumpre","Busca excessiva de aprovação"],color:"#EF9F27"},
-  fleumático:{name:"Fleumático",emoji:"🌊",badge:"Introvertido · Não-Emocional · Inativo",desc:"Você é o ancoradouro. Calmo, confiável e paciente, oferece estabilidade a todos ao redor. Humor hipocrático: fleuma. Defeito dominante: acídia e ociosidade. Virtude a cultivar: fervor e diligência. Santos com este temperamento: São João Maria Vianney, São Tomás de Aquino.",pos:["Estabilidade emocional","Confiabilidade e constância","Paciência e prudência","Mediador natural de conflitos","Persistência silenciosa"],neg:["Resistência a mudanças","Passividade e procrastinação","Dificuldade de motivação","Pode parecer indiferente","Tédio espiritual (acídia)"],color:"#378ADD"},
-  sentimental:{name:"Melancólico",emoji:"🌙",badge:"Introvertido · Emocional · Inativo",desc:"Você tem uma vida interior extraordinariamente rica. Sente o mundo com intensidade rara e cria vínculos profundos. Humor hipocrático: bílis negra. Defeito dominante: tristeza e egocentrismo. Virtude a cultivar: esperança e amor ao próximo. Santos com este temperamento: Santa Teresinha do Menino Jesus, São João Apóstolo.",pos:["Profundidade emocional rara","Empatia intensa","Senso estético elevado","Lealdade e comprometimento profundos","Riqueza criativa e artística"],neg:["Tendência ao pessimismo","Dificuldade em superar mágoas","Autocrítica excessiva","Isolamento e introversão extrema","Paralisia emocional"],color:"#7F77DD"}
+var temperamentos8={
+  apaixonado:{name:"Apaixonado",emoji:"🔥",badge:"Emotivo · Ativo · Secundário",e:1,a:1,r:1,desc:"Ardente, tenacioso, líder natural. Você é um visionário com grande força de vontade e capacidade de organização. Movimento apostólico profundo. Defeito dominante: ira e orgulho pela secundariedade que carrega ressentimentos.",pos:["Visão clara e estratégica","Liderança magnânima","Determinação inabalável","Capacidade de organização","Força de vontade excepcional"],neg:["Dureza e falta de sensibilidade","Ira e presunção","Dificuldade em perdoar","Rancor quando ofendido","Exigente demais com subordinados"],color:"#E74C3C"},
+  colérico:{name:"Colérico",emoji:"⚡",badge:"Emotivo · Ativo · Primário",e:1,a:1,r:-1,desc:"Impulsivo, aventureiro, cheio de energia. Você vive o momento com intensidade e se motiva facilmente. Otimista naturalmente. Humor hipocrático clássico. Defeito dominante: ira em resposta rápida e superficial.",pos:["Entusiasmo contagioso","Iniciativa e coragem","Flexibilidade mental","Audácia em decisões","Força para começar projetos"],neg:["Falta de profundidade","Impaciência e superficialidade","Impulsividade prejudicial","Irascibilidade em conflitos","Confiança excessiva em si mesmo"],color:"#E24B4A"},
+  sanguíneo:{name:"Sanguíneo",emoji:"☀️",badge:"Não-Emotivo · Ativo · Primário",e:-1,a:1,r:-1,desc:"Alegria em movimento. Você faz amigos com facilidade e traz vida a qualquer ambiente. Otimista genuíno. Humor hipocrático clássico. Defeito dominante: inconstância e busca de aprovação.",pos:["Otimismo genuíno","Adaptabilidade excepcional","Comunicação natural","Leveza e alegria","Generosidade espontânea"],neg:["Superficialidade emocional","Inconstância crônica","Promessas não cumpridas","Falta de profundidade","Busca obsessiva de aprovação"],color:"#EF9F27"},
+  sentimental:{name:"Sentimental",emoji:"💔",badge:"Emotivo · Inativo · Secundário",e:1,a:-1,r:1,desc:"Profundo e reflexivo. Você vive intensamente para dentro, com riqueza sentimental rara. Criativo e profundamente leal. Humor hipocrático como melancólico. Defeito dominante: tristeza e autocrítica que carrega feridas.",pos:["Profundidade extraordinária","Empatia intensa","Lealdade inabalável","Sensibilidade estética","Vida interior rica"],neg:["Tendência ao pessimismo","Dificuldade em superar mágoas","Autocrítica paralisante","Isolamento voluntário","Ruminação obsessiva"],color:"#9B59B6"},
+  apático:{name:"Apático",emoji:"🪨",badge:"Não-Emotivo · Inativo · Secundário",e:-1,a:-1,r:1,desc:"Tranquilo e sábio. Você é calmo, calculista e observador. Seguro em suas convicções. Paciência silenciosa. Defeito dominante: apatia e desinteresse que o paralisam.",pos:["Tranquilidade genuína","Paciência exemplar","Senso de justiça","Observação profunda","Independência emocional"],neg:["Apatia crônica","Desinteresse aparente","Passividade excessiva","Insensibilidade ao próximo","Falta de iniciativa"],color:"#34495E"},
+  fleumático:{name:"Fleumático",emoji:"🌊",badge:"Não-Emotivo · Ativo · Secundário",e:-1,a:1,r:1,desc:"O ancoradouro. Você é confiável, constante e paciente. Trabalha devagar mas com solidez. Estabilidade personificada. Humor hipocrático clássico. Defeito dominante: acídia e preguiça.",pos:["Confiabilidade absoluta","Paciência infinita","Constância admirável","Trabalho sólido e metódico","Equilíbrio emocional"],neg:["Acídia espiritual","Preguiça na ação","Resistência a mudanças","Pode parecer indiferente","Falta de iniciativa"],color:"#1ABC9C"},
+  nervoso:{name:"Nervoso",emoji:"🎨",badge:"Emotivo · Inativo · Primário",e:1,a:-1,r:-1,desc:"Sensível e artístico. Você é criativo, generoso e compassivo. Vida emocional variável. Dons especiais para o trato e expressão artística. Defeito dominante: sensibilidade que o torna escravizado ao momento.",pos:["Sensibilidade criativa","Generosidade do coração","Talento artístico","Compaixão natural","Intuição desenvolvida"],neg:["Suscetibilidade extrema","Variabilidade emocional","Inconsistência de ânimo","Influenciabilidade","Falta de disciplina"],color:"#F39C12"},
+  amorfo:{name:"Amorfo",emoji:"💨",badge:"Não-Emotivo · Inativo · Primário",e:-1,a:-1,r:-1,desc:"Influenciável e versátil. Você se adapta ao ambiente e ao momento. Otimista superficial. Sem direção clara. Defeito dominante: preguiça e negligência.",pos:["Adaptabilidade social","Imperturbabilidade","Otimismo descompromissado","Flexibilidade total","Leveza existencial"],neg:["Preguiça crônica","Negligência funcional","Falta de ideais","Influenciabilidade extrema","Incapacidade de comprometimento"],color:"#BDC3C7"}
 };
 
 var tagStyles={
-  colérico:{bg:'#FFE0E0',color:'#C0392B',border:'#E74C3C'},
+  apaixonado:{bg:'#FDEAEA',color:'#C0392B',border:'#E74C3C'},
+  colérico:{bg:'#FFE0E0',color:'#C0392B',border:'#E24B4A'},
   sanguíneo:{bg:'#FFF0C0',color:'#D35400',border:'#E67E22'},
-  fleumático:{bg:'#C8F0E8',color:'#0E8C6A',border:'#1ABC9C'},
-  sentimental:{bg:'#EDE0FF',color:'#6C3483',border:'#9B59B6'},
-  sentimental:{bg:'#EDE0FF',color:'#6C3483',border:'#9B59B6'}
+  sentimental:{bg:'#FCE4EC',color:'#8E24AA',border:'#9B59B6'},
+  apático:{bg:'#ECEFF1',color:'#37474F',border:'#34495E'},
+  fleumático:{bg:'#C8F0E8',color:'#00796B',border:'#1ABC9C'},
+  nervoso:{bg:'#FFF3CD',color:'#CC7722',border:'#F39C12'},
+  amorfo:{bg:'#E0E0E0',color:'#555555',border:'#BDC3C7'}
 };
 
 var order=['colérico','sanguíneo','fleumático','sentimental'];
@@ -372,33 +499,51 @@ var current=0;
 var answers=[];
 for(var i=0;i<questions.length;i++) answers.push(null);
 
-function renderScoreTags(scores){
-  var container=document.getElementById('scoreTags');
+function renderAxisBars(scores){
+  var container=document.getElementById('axisContainer');
   if(!container) return;
-  var sorted=order.slice().sort(function(a,b){return (scores[b]||0)-(scores[a]||0);});
-  var max=scores[sorted[0]]||1;
-  var html='';
-  for(var i=0;i<sorted.length;i++){
-    var k=sorted[i];
-    var s=tagStyles[k];
-    var t=temps[k];
-    var v=scores[k]||0;
-    var pct=Math.round((v/max)*100);
-    html+='<div class="score-tag anim-popin" style="background:'+s.bg+';color:'+s.color+';border-color:'+s.border+';animation-delay:'+(1.0+i*0.08)+'s">'+
-      '<div class="score-tag-bg" style="background:'+s.color+';width:0%" data-w="'+pct+'"></div>'+
-      '<span class="score-tag-label">'+t.emoji+' '+t.name+'</span>'+
-      '<span class="score-tag-pts">'+v+'pt</span>'+
-    '</div>';
-  }
+
+  var eLabel=scores.e>50?'😊 Emotivo':'😐 Não-Emotivo';
+  var aLabel=scores.a>50?'⚡ Ativo':'😴 Inativo';
+  var rLabel=scores.r>50?'💭 Secundário':'⚡ Primário';
+
+  var html='<div class="axis-bars">';
+  html+='<div class="axis-row anim-fadeup" style="animation-delay:1.0s">';
+  html+='<div class="axis-label">Emotividade</div>';
+  html+='<div class="axis-bar"><div class="axis-fill" style="width:0%" data-w="'+scores.e+'"></div></div>';
+  html+='<div class="axis-value">'+scores.e+'%</div>';
+  html+='<div class="axis-desc">'+eLabel+'</div>';
+  html+='</div>';
+
+  html+='<div class="axis-row anim-fadeup" style="animation-delay:1.1s">';
+  html+='<div class="axis-label">Atividade</div>';
+  html+='<div class="axis-bar"><div class="axis-fill" style="width:0%" data-w="'+scores.a+'"></div></div>';
+  html+='<div class="axis-value">'+scores.a+'%</div>';
+  html+='<div class="axis-desc">'+aLabel+'</div>';
+  html+='</div>';
+
+  html+='<div class="axis-row anim-fadeup" style="animation-delay:1.2s">';
+  html+='<div class="axis-label">Ressonância</div>';
+  html+='<div class="axis-bar"><div class="axis-fill" style="width:0%" data-w="'+scores.r+'"></div></div>';
+  html+='<div class="axis-value">'+scores.r+'%</div>';
+  html+='<div class="axis-desc">'+rLabel+'</div>';
+  html+='</div>';
+  html+='</div>';
+
   container.innerHTML=html;
   setTimeout(function(){
-    var bars=document.querySelectorAll('#scoreTags .score-tag-bg');
+    var bars=document.querySelectorAll('.axis-fill');
     for(var i=0;i<bars.length;i++) bars[i].style.width=bars[i].getAttribute('data-w')+'%';
-  },200);
+  },300);
+}
+
+function renderScoreTags(scores){
+  // Esta função foi substituída por renderAxisBars()
+  // Mantém a estrutura para compatibilidade
 }
 
 function fillResult(key,scores){
-  var t=temps[key];
+  var t=temperamentos8[key];
   var resEl=document.getElementById('result');
   resEl.style.display='block';
   var emoji=document.getElementById('res-emoji');
@@ -419,7 +564,7 @@ function fillResult(key,scores){
   var negHtml='';
   for(var i=0;i<t.neg.length;i++) negHtml+='<div class="pf-item anim-slide" style="animation-delay:'+(0.65+i*0.1)+'s"><div class="pf-dot neg"></div>'+t.neg[i]+'</div>';
   document.getElementById('res-neg').innerHTML=negHtml;
-  renderScoreTags(scores);
+  renderAxisBars(scores);
   document.getElementById('hero').style.display='none';
   document.getElementById('quiz').style.display='none';
 }
@@ -430,11 +575,14 @@ function generateAIResult(key,secondKey,scores,answersData){
   aiLoading.style.display='block';
   aiContent.innerHTML='';
 
-  fetch('claude-proxy.php',{
+  fetch('/api/claude-proxy.php',{
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({winner:key,secondKey:secondKey,answers:answersData})
-  }).then(function(res){return res.json();}).then(function(data){
+  }).then(function(res){
+    if(res.status===429){var e=new Error('limite');e.status=429;throw e;}
+    return res.json();
+  }).then(function(data){
     if(!data.content||!data.content[0]){
       throw new Error(data.error||'Resposta vazia da API');
     }
@@ -455,8 +603,13 @@ function generateAIResult(key,secondKey,scores,answersData){
     aiLoading.style.display='none';
     saveToCache(key,secondKey,scores,answersData,html);
   }).catch(function(err){
-    aiContent.innerHTML='<div class="ai-error">Não foi possível gerar a análise personalizada agora. Você pode tentar novamente atualizando a página. 🙏</div>';
-    aiLoading.style.display='none';
+    if(err && err.status===429){
+      aiLoading.style.display='none';
+      abrirLimiteModal();
+    } else {
+      aiContent.innerHTML='<div class="ai-error">Não foi possível gerar a análise personalizada agora. Você pode tentar novamente atualizando a página. 🙏</div>';
+      aiLoading.style.display='none';
+    }
   });
 }
 
@@ -475,6 +628,18 @@ function startQuiz(){
   render();
 }
 
+function determineTypeForOption(e,a,r){
+  var ePos=e>0, aPos=a>0, rPos=r>0;
+  if(ePos && aPos && rPos) return 'apaixonado';
+  if(ePos && aPos && !rPos) return 'colérico';
+  if(!ePos && aPos && !rPos) return 'sanguíneo';
+  if(ePos && !aPos && rPos) return 'sentimental';
+  if(!ePos && !aPos && rPos) return 'apático';
+  if(!ePos && aPos && rPos) return 'fleumático';
+  if(ePos && !aPos && !rPos) return 'nervoso';
+  if(!ePos && !aPos && !rPos) return 'amorfo';
+}
+
 function render(){
   var q=questions[current];
   var pct=Math.round(((current+1)/questions.length)*100);
@@ -490,7 +655,7 @@ function render(){
   for(var i=0;i<q.opts.length;i++){
     var b=document.createElement('button');
     var sc=q.opts[i].s;
-    var topKey=Object.keys(sc).reduce(function(a,bb){return sc[a]>=sc[bb]?a:bb;});
+    var topKey=determineTypeForOption(sc.e||0, sc.a||0, sc.r||0);
     var ts=tagStyles[topKey];
     var isSelected=answers[current]===i;
     b.className='opt'+(isSelected?' selected':'');
@@ -500,7 +665,7 @@ function render(){
     b.style.color=isSelected?'#fff':(ts?ts.color:'#2d2b45');
     b.style.borderColor='transparent';
     b.style.boxShadow='0 2px 10px rgba(0,0,0,.08)';
-    var icon=temps[topKey]?temps[topKey].emoji:'•';
+    var icon=temperamentos8[topKey]?temperamentos8[topKey].emoji:'•';
     b.innerHTML='<span class="opt-letter">'+icon+'</span><span>'+q.opts[i].t+'</span>';
     b.onclick=(function(idx){return function(){selectOpt(idx);};})(i);
     opts.appendChild(b);
@@ -538,19 +703,59 @@ function next(){
 function prev(){if(current>0){current--;render();}}
 
 function showResult(){
-  var scores={};
-  for(var k in temps) scores[k]=0;
+  // FASE 2: Calcular scores dos 3 eixos (E, A, R)
+  var axisScores={e:0,a:0,r:0};
   for(var qi=0;qi<questions.length;qi++){
     var ai=answers[qi];
     if(ai===null) continue;
     var sc=questions[qi].opts[ai].s;
-    for(var k in sc) scores[k]=(scores[k]||0)+sc[k];
+    axisScores.e=(axisScores.e||0)+(sc.e||0);
+    axisScores.a=(axisScores.a||0)+(sc.a||0);
+    axisScores.r=(axisScores.r||0)+(sc.r||0);
   }
-  var sorted=order.slice().sort(function(a,b){return scores[b]-scores[a];});
-  var winner=sorted[0];
-  var secondKey=scores[sorted[1]]>=scores[winner]*0.5?sorted[1]:null;
+
+  // Normalizar scores de -20..+20 para 0..100
+  function normalize(val){
+    return Math.round(((val+20)/40)*100);
+  }
+  var normalizedScores={
+    e:normalize(axisScores.e),
+    a:normalize(axisScores.a),
+    r:normalize(axisScores.r)
+  };
+
+  // Determinar tipo primário baseado em combinação E/A/R
+  function determineType(e,a,r){
+    var ePos=e>50, aPos=a>50, rPos=r>50;
+    if(ePos && aPos && rPos) return 'apaixonado';
+    if(ePos && aPos && !rPos) return 'colérico';
+    if(!ePos && aPos && !rPos) return 'sanguíneo';
+    if(ePos && !aPos && rPos) return 'sentimental';
+    if(!ePos && !aPos && rPos) return 'apático';
+    if(!ePos && aPos && rPos) return 'fleumático';
+    if(ePos && !aPos && !rPos) return 'nervoso';
+    if(!ePos && !aPos && !rPos) return 'amorfo';
+  }
+
+  var winner=determineType(normalizedScores.e,normalizedScores.a,normalizedScores.r);
+
+  // Determinar tipo secundário (se houver um próximo tipo próximo)
+  var allTypes=['apaixonado','colérico','sanguíneo','sentimental','apático','fleumático','nervoso','amorfo'];
+  var similarities=[];
+  for(var i=0;i<allTypes.length;i++){
+    if(allTypes[i]===winner) continue;
+    var t=temperamentos8[allTypes[i]];
+    var diff=Math.abs(normalizedScores.e-(t.e>0?75:25))+
+             Math.abs(normalizedScores.a-(t.a>0?75:25))+
+             Math.abs(normalizedScores.r-(t.r>0?75:25));
+    similarities.push({type:allTypes[i],diff:diff});
+  }
+  similarities.sort(function(a,b){return a.diff-b.diff;});
+  var secondKey=similarities[0].diff<45?similarities[0].type:null;
+
+  // Mostrar tipo secundário se existir
   if(secondKey){
-    var t2=temps[secondKey];
+    var t2=temperamentos8[secondKey];
     var secBlock=document.getElementById('res-secondary');
     secBlock.style.display='block';
     secBlock.style.borderLeft='4px solid '+t2.color;
@@ -560,13 +765,22 @@ function showResult(){
   } else {
     document.getElementById('res-secondary').style.display='none';
   }
-  fillResult(winner,scores);
-  generateAIResult(winner,secondKey,scores,answers,true);
+
+  // Guardar resultado
   window._result=winner;
+  window._axes=normalizedScores;
+  window._secondType=secondKey;
+
+  fillResult(winner,normalizedScores);
+
+  // Salvar no cache IMEDIATAMENTE (antes da API)
+  saveToCache(winner,secondKey,normalizedScores,answers,'<div style="text-align:center;color:#8885a8">Gerando análise...</div>');
+
+  generateAIResult(winner,secondKey,normalizedScores,answers,true);
 }
 
 function restart(){
-  localStorage.removeItem('quiz_temperamentos_v1');
+  localStorage.removeItem('quiz_temperamentos_v2');
   current=0;
   for(var i=0;i<answers.length;i++) answers[i]=null;
   document.getElementById('result').style.display='none';
@@ -612,7 +826,7 @@ function gerarPDFBlob(callback){
 }
 
 function share(){
-  var name=temps[window._result]?temps[window._result].name:'Resultado';
+  var name=temperamentos8[window._result]?temperamentos8[window._result].name:'Resultado';
   var btn=document.getElementById('btnShare');
   btn.textContent='Gerando...';
   btn.disabled=true;
@@ -634,10 +848,10 @@ function share(){
       aiData.push({title:titleEl?titleEl.textContent:'',text:textEl?textEl.textContent:'',persons:persons});
     });
     var cache={};
-    try{cache=JSON.parse(localStorage.getItem('quiz_temperamentos_v1')||'{}');}catch(e){}
+    try{cache=JSON.parse(localStorage.getItem('quiz_temperamentos_v2')||'{}');}catch(e){}
     var payload=JSON.stringify({winner:window._result||cache.winner,secondKey:cache.secondKey||null,scores:cache.scores||{},ai:aiData});
     var form=document.createElement('form');
-    form.method='POST';form.action='gerar-pdf.php';form.target='_blank';
+    form.method='POST';form.action='/api/gerar-pdf.php';form.target='_blank';
     var inp=document.createElement('input');
     inp.type='hidden';inp.name='payload';inp.value=payload;
     form.appendChild(inp);document.body.appendChild(form);form.submit();document.body.removeChild(form);
@@ -714,6 +928,41 @@ function fecharShareSheet(){
   document.getElementById('shareSheet').style.display='none';
 }
 
+function abrirLimiteModal(){
+  var overlay=document.getElementById('limiteOverlay');
+  overlay.style.display='flex';
+  document.body.style.overflow='hidden';
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      document.getElementById('limiteModal').classList.add('ativo');
+    });
+  });
+}
+
+function fecharLimiteModal(){
+  var overlay=document.getElementById('limiteOverlay');
+  var modal=document.getElementById('limiteModal');
+  modal.classList.remove('ativo');
+  setTimeout(function(){
+    overlay.style.display='none';
+    document.body.style.overflow='';
+  },320);
+}
+
+function abrirPix(){
+  // Chave Pix — substitua pela sua chave real
+  var chavePix='rodrigopaulodev@gmail.com';
+  var msg='Para liberar sua análise, faça um Pix de R$ 1,00 para:\n\n🔑 Chave: '+chavePix+'\n\nApós o pagamento, sua análise será liberada automaticamente.';
+  showToast('Chave Pix copiada!');
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(chavePix);
+  }
+  fecharLimiteModal();
+  setTimeout(function(){
+    alert(msg);
+  },350);
+}
+
 function showToast(msg){
   var t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
@@ -723,7 +972,7 @@ function showToast(msg){
 
 
 // Cache helpers
-var CACHE_KEY='quiz_temperamentos_v1';
+var CACHE_KEY='quiz_temperamentos_v2';
 function saveToCache(winner,secondKey,scores,answersData,aiHtml){
   try{
     localStorage.setItem(CACHE_KEY,JSON.stringify({
@@ -741,8 +990,8 @@ function loadFromCache(){
     window._result=c.winner;
     if(c.answers) answers=c.answers;
     // Bloco secundário
-    if(c.secondKey&&temps[c.secondKey]){
-      var t2=temps[c.secondKey];
+    if(c.secondKey&&temperamentos8[c.secondKey]){
+      var t2=temperamentos8[c.secondKey];
       var sec=document.getElementById('res-secondary');
       sec.style.display='block';
       sec.style.borderLeft='4px solid '+t2.color;
