@@ -6,6 +6,7 @@
 <title>Quiz dos Temperamentos</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{max-width:100%;overflow-x:hidden}
 :root{
   --purple:#7F77DD;--purple-dark:#534AB7;--purple-light:#f0effc;
   --bg:#ffffff;--text:#2d2b45;--muted:#8885a8;--border:#ebe9f8;
@@ -23,7 +24,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .hero-overlay-inner{font-size:1.8rem;font-weight:700;color:#fff;text-align:center;opacity:0;transition:opacity .3s ease}
 .hero-overlay:hover .hero-overlay-inner{opacity:1}
 .ha{opacity:0}
-.hero-img{max-width:auto;width:100%;margin-bottom:1rem;border-radius:24px}
+.hero-img{max-width:100%;width:100%;margin-bottom:1rem;border-radius:24px}
 .hero-title{font-family:'Oswald','Impact','Arial Narrow',sans-serif;font-size:2rem;font-weight:700;color:var(--purple-dark);letter-spacing:2px;margin-bottom:.4rem;line-height:1.2}
 .hero-sub{font-size:.95rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
 .tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:1.75rem}
@@ -80,7 +81,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .result-sub{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.4rem}
 .result-name{font-size:2.4rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
 .result-badge{display:inline-block;padding:5px 16px;border-radius:99px;background:var(--purple-light);color:var(--purple-dark);font-size:12px;font-weight:500;margin-bottom:1.25rem}
-.result-desc{font-size:.95rem;color:var(--muted);line-height:1.75;max-width:480px;margin:0 auto}
+.result-desc{font-size:.95rem;color:var(--muted);line-height:1.75;max-width:min(480px,100%);margin:0 auto}
 .result-secondary{margin-top:1.5rem;padding:1rem 1.25rem;border-radius:var(--radius-sm);background:var(--purple-light);border:1px solid #dddaf8;text-align:left}
 .sec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.3rem}
 .sec-name{font-size:1.2rem;font-weight:700;margin-bottom:.4rem}
@@ -108,20 +109,53 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 .ai-person-desc{font-size:.85rem;color:var(--muted);line-height:1.6}
 .ai-error{color:#E24B4A;font-size:.9rem;padding:1rem;background:#fde8e8;border-radius:var(--radius-sm)}
 .chart-section{margin-bottom:2rem}
-.chart-heading{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:1rem}
-.axis-bars{display:flex;flex-direction:column;gap:1.25rem}
-.axis-row{display:grid;grid-template-columns:100px 1fr 50px 130px;gap:1rem;align-items:center;font-size:.9rem}
-@media(max-width:480px){.axis-row{grid-template-columns:80px 1fr 40px;gap:0.75rem}.axis-desc{display:none}}
-.axis-label{font-weight:600;color:var(--text);white-space:nowrap}
-.axis-bar{height:12px;background:var(--border);border-radius:6px;position:relative;overflow:hidden}
-.axis-fill{height:100%;background:var(--purple);border-radius:6px;transition:width .8s cubic-bezier(.4,0,.2,1);width:0}
-.axis-value{font-weight:600;color:var(--purple);text-align:right;white-space:nowrap;min-width:40px}
-.axis-desc{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
+/* === NOVO LAYOUT 3 EIXOS === */
+.eixos-wrap{background:#ffffff;border-radius:20px;padding:24px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.13),0 8px 24px rgba(127,119,221,.18),0 2px 8px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,.9)}
+.eixos-header{display:grid;grid-template-columns:0.5fr 1fr;gap:5px;margin-bottom:20px;align-items:center}
+@media(max-width:520px){.eixos-header{grid-template-columns:1fr}.eixos-titulo{text-align:center}.eixos-resumo-txt{text-align:center}.eixo-icon{display:none}}
+.eixos-titulo{font-family:'Oswald','Impact',sans-serif;font-size:1.8rem;font-weight:900;line-height:1.15;color:#2d2b45;text-transform:uppercase}
+.eixos-titulo span{color:var(--purple)}
+.eixos-resumo-txt{font-size:.88rem;color:#555;line-height:1.6;margin-top:10px}
+.eixos-resumo-txt strong{color:var(--purple-dark)}
+.eixos-personagem{display:flex;justify-content:center;align-items:center;border-radius:16px}
+.eixos-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.eixo-card{border-radius:5px;padding:14px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.eixo-icon{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0}
+.eixo-body{flex:1;min-width:0}
+.eixo-name{font-size:.95rem;font-weight:800;margin-bottom:2px}
+.eixo-desc-txt{font-size:.73rem;color:#888;margin-bottom:8px;line-height:1.4}
+.eixo-bar-track{height:10px;background:#f0f0f0;border-radius:99px;overflow:hidden;margin-bottom:4px}
+.eixo-bar-fill{height:100%;border-radius:99px;width:0;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.eixo-bar-footer{display:flex;justify-content:space-between;align-items:center}
+.eixo-pct{font-size:.8rem;font-weight:700}
+.eixo-label{font-size:.75rem;font-weight:700;display:flex;align-items:center;gap:4px}
+/* Resumo inferior */
+.eixos-resumo-titulo{font-size:1.2rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px;color:#7b73d5;padding:8px 10px;display:flex;align-items:end;border-bottom:3px solid #7b73d5}
+.eixos-resumo-titulo span{color:#7b73d5}
+.eixos-resumo{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:520px){.eixos-resumo{grid-template-columns:1fr;gap:8px}}
+.eixos-resumo-badge{display:none}
+.eixo-resumo-item{border-radius:0px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.eixo-resumo-titulo{font-size:.95rem;font-weight:800}
+.eixo-resumo-desc{font-size:.82rem;color:#666;line-height:1.5}
 .score-tags{display:flex;flex-direction:column;gap:10px;align-items:stretch}
 .score-tag{padding:7px 16px;border-radius:99px;font-size:12px;font-weight:600;border:1.5px solid;display:flex;align-items:center;gap:10px;position:relative;overflow:hidden}
 .score-tag-bg{position:absolute;top:0;left:0;height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1);z-index:0;opacity:0.35}
 .score-tag-label{position:relative;z-index:1;white-space:nowrap}
 .score-tag-pts{position:relative;z-index:1;font-size:11px;font-weight:400;margin-left:auto;white-space:nowrap;opacity:.8}
+/* Paywall */
+.result-locked-section{display:none}
+.paywall{background:#fff;border-radius:24px;padding:32px 24px 24px;text-align:center;margin:1.5rem 0;box-shadow:0 8px 32px rgba(80,60,180,.12);position:relative;overflow:hidden}
+.paywall-rocket{width:80px;height:80px;background:linear-gradient(135deg,#e8e4ff,#d0c8ff);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:2.4rem;box-shadow:0 8px 24px rgba(127,119,221,.22)}
+.paywall-title{font-size:1.6rem;font-weight:800;margin-bottom:10px;background:linear-gradient(90deg,#a855f7,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.paywall-bold{font-size:.93rem;font-weight:700;color:#2d2b45;margin-bottom:6px}
+.paywall-desc{font-size:.84rem;color:#8885a8;line-height:1.6;margin-bottom:16px}
+.paywall-benefits{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:18px}
+@media(max-width:400px){.paywall-benefits{grid-template-columns:1fr}}
+.paywall-benefit{border-radius:12px;padding:10px 8px;display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:600;color:#534AB7}
+.paywall-btn{width:100%;padding:15px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:14px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(99,102,241,.35);transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.paywall-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(99,102,241,.45)}
+.paywall-valor{color:#fde68a}
 .result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
 .btn-restart{padding:12px 28px;background:#fff;color:var(--purple);border:none;border-radius:99px;font-size:.9rem;font-weight:600;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .btn-share{padding:12px 28px;background:var(--purple);color:#fff;border:none;border-radius:99px;font-size:.9rem;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(127,119,221,.3)}
@@ -138,7 +172,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
 <body>
 
 <div class="hero" id="hero">
-  <img src="./logo-8.png" alt="Personagens dos temperamentos" class="hero-img ha" data-anim="heroScaleIn" data-dur="0.8"/>
+  <img src="./assests/s-logo.png" alt="Personagens dos temperamentos" class="hero-img ha" data-anim="heroScaleIn" data-dur="0.8"/>
   <div class="hero-overlay" id="heroOverlay" onclick="startQuiz()" style="background:rgba(127,119,221,.15);backdrop-filter:blur(4px)">
     <div class="hero-overlay-inner">Toque aqui</div>
   </div>
@@ -159,7 +193,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="refs-books ha" data-anim="heroFadeIn" data-dur="0.7">
     <div class="refs-title">Sistema Heymans-Le Senne com referências</div>
     <div class="refs-list">
-      <span><em>Teste dos 8 Temperamentos</em> · Heymans & Wiersma</span>
+      <span>Heymans & Wiersma · <em>Teste dos 8 Temperamentos</em></span>
       <span>Pe. José Antonio Gonzalez · <em>O Conhecimento de Si Mesmo</em></span>
       <span>Pe. Antonio Royo Marín · <em>A Vida de Oração</em></span>
       <span>Padre Paulo Ricardo · <em>Os Quatro Temperamentos (clássicos)</em></span>
@@ -197,41 +231,209 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <p class="sec-desc" id="res-sec-desc"></p>
     </div>
   </div>
-  <div class="divider"></div>
-  <div class="pf-grid">
-    <div class="pf-section">
-      <div class="pf-heading">Pontos fortes</div>
-      <div class="pf-list" id="res-pos"></div>
+  <!-- PAYWALL -->
+  <div id="resultPaywall" class="paywall">
+    <!-- Estrelinhas -->
+    <div style="position:absolute;top:18px;left:28px;font-size:1rem;pointer-events:none">✨</div>
+    <div style="position:absolute;top:46px;left:16px;font-size:.7rem;pointer-events:none">⭐</div>
+    <div style="position:absolute;top:18px;right:52px;font-size:.9rem;pointer-events:none">✨</div>
+
+    <div class="paywall-rocket">🚀</div>
+    <div class="paywall-title">Quase lá!</div>
+    <p class="paywall-bold">Desbloqueie sua análise completa.</p>
+    <p class="paywall-desc">Para ver seu resultado completo, faça uma contribuição de apenas <strong style="color:#6366f1;white-space:nowrap">R$ <span id="paywallValor">1,00</span></strong>.<br><br>Isso ajuda a cobrir os custos de processamento da IA e manter a plataforma para todos.</p>
+
+    <div class="paywall-benefits">
+      <div class="paywall-benefit" style="background:#f5f3ff">🔒 Pagamento seguro via Pix</div>
+      <div class="paywall-benefit" style="background:#f0fdf4">⚡ Liberação instantânea</div>
+      <div class="paywall-benefit" style="background:#eff6ff">📊 Perfil nos 3 eixos</div>
+      <div class="paywall-benefit" style="background:#fdf4ff">🤖 Análise com IA</div>
     </div>
-    <div class="pf-section">
-      <div class="pf-heading">A desenvolver</div>
-      <div class="pf-list" id="res-neg"></div>
+
+    <button class="paywall-btn" onclick="abrirLimiteModal()">
+      <svg width="20" height="20" viewBox="0 0 512 512" fill="white" style="flex-shrink:0"><path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-21.997l78.431-78.431c5.074-5.074 13.694-5.06 18.752 0l78.762 78.762c14.192 14.19 33.064 21.997 53.12 21.997h15.697l-99.387 99.378c-29.454 29.461-77.224 29.461-106.687 0L105 391.19h7.57zm283.128-270.384c-20.056 0-38.928 7.808-53.12 21.997l-78.762 78.754c-5.18 5.18-13.564 5.19-18.752 0l-78.43-78.423c-14.193-14.19-33.065-21.997-53.121-21.997H104.9l99.487-99.478c29.463-29.461 77.233-29.461 106.687 0l99.337 99.147h-14.709z"/></svg>
+      Pagar com Pix · <span class="paywall-valor">R$ <span id="paywallValorBtn">1,00</span></span>
+    </button>
+    <button onclick="restart()" style="width:100%;padding:11px;background:none;border:none;color:#8885a8;font-size:.88rem;cursor:pointer">↺ Refazer o quiz</button>
+    <div style="display:flex;align-items:flex-start;gap:6px;margin-top:10px;font-size:.72rem;color:#8885a8;line-height:1.5">
+      <span>🔒</span>
+      <span>Ao realizar o pagamento, sua análise será <strong style="color:#6366f1">liberada automaticamente</strong> em poucos segundos.</span>
     </div>
   </div>
-  <div class="divider"></div>
-  <div class="ai-result">
-    <div class="ai-loading" id="aiLoading" style="display:none">
-      <div class="ai-spinner"></div>
-      <div>Gerando sua análise personalizada com IA...</div>
+
+  <!-- SEÇÕES BLOQUEADAS -->
+  <div id="resultFull" class="result-locked-section">
+    <div class="divider"></div>
+    <div class="pf-grid">
+      <div class="pf-section">
+        <div class="pf-heading">Pontos fortes</div>
+        <div class="pf-list" id="res-pos"></div>
+      </div>
+      <div class="pf-section">
+        <div class="pf-heading">A desenvolver</div>
+        <div class="pf-list" id="res-neg"></div>
+      </div>
     </div>
-    <div id="aiContent"></div>
+    <div class="divider"></div>
+    <div class="chart-section">
+      <div class="axis-container" id="axisContainer"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="ai-result">
+      <div class="ai-loading" id="aiLoading" style="display:none">
+        <div class="ai-spinner"></div>
+        <div>Gerando sua análise personalizada com IA...</div>
+      </div>
+      <div id="aiContent"></div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-restart" id="btnRestart">↺ Refazer</button>
+      <button class="btn-share" id="btnShare">Compartilhar</button>
+    </div>
   </div>
-  <div class="divider"></div>
-  <div class="chart-section">
-    <div class="chart-heading">Seu perfil nos 3 eixos</div>
-    <div class="axis-container" id="axisContainer"></div>
-  </div>
-  <div class="result-actions">
-    <button class="btn-restart" id="btnRestart">↺ Refazer</button>
-    <button class="btn-share" id="btnShare">Compartilhar</button>
-  </div>
+
   <div class="footer">
-    Baseado em Hipócrates · Eysenck · Le Gall · Nemi<br>
-    <strong>Desenvolvido por Rodrigo Paulo</strong>
+    Sistema Heymans-Le Senne · Heymans & Wiersma · Pe. Gonzalez · Royo Marín<br>
+    Padre Paulo Ricardo · Murilo Frizanco<br>
+    <strong>Desenvolvido por Rodrigo Paulo</strong> com IA
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ===================== MODAL LIMITE PIX ===================== -->
+<style>
+#limiteOverlay{
+  display:none;position:fixed;inset:0;z-index:1000;
+  background:rgba(30,20,60,.6);backdrop-filter:blur(4px);
+  overflow-y:auto;padding:16px;
+  align-items:flex-start;justify-content:center;
+}
+#limiteModal{
+  position:relative;background:#fff;border-radius:24px;
+  text-align:center;width:100%;max-width:420px;
+  margin:auto;padding:32px 24px 24px;
+  box-shadow:0 24px 80px rgba(80,60,180,.25);
+  opacity:0;transform:scale(0.92);
+  transition:opacity .3s ease,transform .3s ease;
+  overflow-y:auto;
+  max-height:calc(100vh - 48px);
+}
+#limiteModal.ativo{opacity:1;transform:scale(1)}
+@media(max-width:480px){
+  #limiteOverlay{padding:0;align-items:flex-end}
+  #limiteModal{
+    border-radius:24px 24px 0 0;max-width:100%;margin:0;
+    padding:20px 18px 32px;transform:translateY(40px);
+    max-height:92vh;
+  }
+  #limiteModal.ativo{transform:translateY(0)}
+}
+.lm-rocket{width:88px;height:88px;background:linear-gradient(135deg,#e8e4ff,#d0c8ff);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:2.6rem;box-shadow:0 8px 24px rgba(127,119,221,.22)}
+.lm-title{font-size:1.75rem;font-weight:800;margin-bottom:10px;background:linear-gradient(90deg,#a855f7,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lm-bold{font-size:.93rem;font-weight:700;color:#2d2b45;margin-bottom:6px}
+.lm-desc{font-size:.84rem;color:#8885a8;line-height:1.6;margin-bottom:18px}
+.lm-benefits{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.lm-benefit{border-radius:12px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.lm-benefit-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem}
+.lm-benefit-title{font-size:.74rem;font-weight:700;color:#2d2b45;line-height:1.2}
+.lm-benefit-sub{font-size:.68rem;color:#8885a8}
+.lm-btn-pix{width:100%;padding:15px;border:none;border-radius:14px;font-size:.97rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;cursor:pointer;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 6px 20px rgba(99,102,241,.35);transition:.2s}
+.lm-btn-pix:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(99,102,241,.45)}
+/* Tela QR Code */
+.lm-qr-screen{display:none;text-align:center}
+.lm-qr-img{width:180px;height:180px;border-radius:12px;border:3px solid #e0e7ff;margin:8px auto;display:block}
+@media(max-width:480px){.lm-qr-img{width:160px;height:160px;margin:6px auto}}
+.lm-qr-loading{padding:20px;color:#8885a8;font-size:.88rem}
+.lm-copia-cola{width:100%;padding:10px 14px;background:#f5f3ff;border:1.5px solid #c4b5fd;border-radius:10px;font-size:.72rem;color:#4c1d95;word-break:break-all;text-align:left;margin-bottom:8px;cursor:pointer;transition:.2s}
+.lm-copia-cola:hover{background:#ede9fe}
+.lm-status-polling{font-size:.78rem;color:#8885a8;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px}
+.lm-dot-pulse{width:8px;height:8px;border-radius:50%;background:#6366f1;animation:pulse-dot 1.2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+.lm-paid-screen{display:none;text-align:center;padding:20px 0}
+.lm-paid-icon{font-size:3rem;margin-bottom:8px}
+.lm-paid-title{font-size:1.1rem;font-weight:700;color:#059669;margin-bottom:4px}
+.lm-paid-desc{font-size:.84rem;color:#8885a8}
+.lm-btn-voltar{width:100%;padding:13px;background:#fff;color:#6366f1;border:2px solid #e0e7ff;border-radius:14px;font-size:.95rem;font-weight:600;cursor:pointer}
+.lm-footer{display:flex;align-items:flex-start;justify-content:center;gap:6px;margin-top:12px;font-size:.74rem;color:#8885a8;line-height:1.5}
+.lm-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:#f0effc;border:none;cursor:pointer;font-size:1rem;color:#8885a8;display:flex;align-items:center;justify-content:center}
+</style>
+
+<div id="limiteOverlay" onclick="fecharLimiteModal()">
+<div id="limiteModal" onclick="event.stopPropagation()">
+
+  <button class="lm-close" onclick="fecharLimiteModal()">✕</button>
+
+  <div id="lmStars">
+    <div style="position:absolute;top:20px;left:32px;font-size:1.1rem;pointer-events:none">✨</div>
+    <div style="position:absolute;top:52px;left:18px;font-size:.75rem;pointer-events:none">⭐</div>
+    <div style="position:absolute;top:20px;right:56px;font-size:.95rem;pointer-events:none">✨</div>
+  </div>
+
+  <!-- Tela inicial: botão Pix -->
+  <div id="lmTelaInicial">
+
+  <div class="lm-rocket">🚀</div>
+
+  <div class="lm-title">Quase lá!</div>
+
+  <p class="lm-bold">Você atingiu o limite de resultados disponíveis gratuitamente.</p>
+  <p class="lm-desc">Para continuar explorando suas análises e receber novos insights personalizados, faça uma contribuição de apenas <strong style="color:#6366f1;white-space:nowrap">R$ <span id="lmValorDesc">1,00</span></strong>.<br><br>Esse valor ajuda a cobrir os custos de processamento da IA e a manter a plataforma disponível para todos.</p>
+
+  <div class="lm-benefits">
+    <div class="lm-benefit" style="background:#f5f3ff">
+      <div class="lm-benefit-icon" style="background:#ede9fe">🔒</div>
+      <div class="lm-benefit-title">Pagamento seguro</div>
+      <div class="lm-benefit-sub">via Pix</div>
+    </div>
+    <div class="lm-benefit" style="background:#f0fdf4">
+      <div class="lm-benefit-icon" style="background:#dcfce7">⚡</div>
+      <div class="lm-benefit-title">Liberação</div>
+      <div class="lm-benefit-sub">instantânea</div>
+    </div>
+    <div class="lm-benefit" style="background:#eff6ff">
+      <div class="lm-benefit-icon" style="background:#dbeafe">📊</div>
+      <div class="lm-benefit-title">Continue de</div>
+      <div class="lm-benefit-sub">onde parou</div>
+    </div>
+  </div>
+    <button class="lm-btn-pix" onclick="iniciarPix()">
+      <svg width="20" height="20" viewBox="0 0 512 512" fill="white" style="flex-shrink:0"><path d="M112.57 391.19c20.056 0 38.928-7.808 53.12-21.997l78.431-78.431c5.074-5.074 13.694-5.06 18.752 0l78.762 78.762c14.192 14.19 33.064 21.997 53.12 21.997h15.697l-99.387 99.378c-29.454 29.461-77.224 29.461-106.687 0L105 391.19h7.57zm283.128-270.384c-20.056 0-38.928 7.808-53.12 21.997l-78.762 78.754c-5.18 5.18-13.564 5.19-18.752 0l-78.43-78.423c-14.193-14.19-33.065-21.997-53.121-21.997H104.9l99.487-99.478c29.463-29.461 77.233-29.461 106.687 0l99.337 99.147h-14.709z"/></svg>
+      Pagar com Pix · <strong>R$ <span id="lmValorBtn">1,00</span></strong>
+    </button>
+    <button class="lm-btn-voltar" onclick="fecharLimiteModal()">← Voltar</button>
+    <div class="lm-footer">
+      <span>🔒</span>
+      <span>Ao realizar o pagamento, sua análise será <strong style="color:#6366f1">liberada automaticamente</strong> em poucos segundos.</span>
+    </div>
+  </div>
+
+  <!-- Tela QR Code -->
+  <div class="lm-qr-screen" id="lmTelaQR">
+    <div style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8885a8;margin-bottom:4px">Pague com Pix</div>
+    <div style="font-size:1.5rem;font-weight:800;color:#6366f1;margin-bottom:2px">R$ <span id="lmValorQR">1,00</span></div>
+    <div style="font-size:.75rem;color:#8885a8;margin-bottom:12px">Escaneie o QR Code ou copie o código</div>
+    <div id="lmQrLoading" class="lm-qr-loading">⏳ Gerando QR Code...</div>
+    <img id="lmQrImg" class="lm-qr-img" src="" alt="QR Code Pix" style="display:none">
+    <textarea id="lmCopiaCola" class="lm-copia-cola" readonly rows="3" onclick="copiarPix(this)" title="Clique para copiar" style="display:none"></textarea>
+    <button onclick="copiarPix(document.getElementById('lmCopiaCola'))" style="width:100%;padding:10px;background:#f5f3ff;border:1.5px solid #c4b5fd;border-radius:10px;font-size:.85rem;font-weight:600;color:#6366f1;cursor:pointer;margin-bottom:10px;display:none" id="lmBtnCopiar">📋 Copiar código Pix</button>
+    <div class="lm-status-polling" id="lmPolling" style="display:none">
+      <div class="lm-dot-pulse"></div>
+      Aguardando confirmação do pagamento...
+    </div>
+    <div style="font-size:.72rem;color:#f59e0b;margin-top:6px" id="lmTimer"></div>
+    <button class="lm-btn-voltar" style="margin-top:12px" onclick="voltarTelaInicial()">← Voltar</button>
+  </div>
+
+  <!-- Tela Pago -->
+  <div class="lm-paid-screen" id="lmTelaPago">
+    <div class="lm-paid-icon">✅</div>
+    <div class="lm-paid-title">Pagamento confirmado!</div>
+    <div class="lm-paid-desc">Sua análise será gerada agora. Aguarde um momento...</div>
+  </div>
+
+</div><!-- /limiteModal -->
+</div><!-- /limiteOverlay -->
 
 <!-- Bottom sheet de compartilhamento (mobile) -->
 <div id="shareOverlay" onclick="fecharShareSheet()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:998"></div>
@@ -374,14 +576,22 @@ var questions=[
 ];
 
 var temperamentos8={
-  apaixonado:{name:"Apaixonado",emoji:"🔥",badge:"Emotivo · Ativo · Secundário",e:1,a:1,r:1,desc:"Ardente, tenacioso, líder natural. Você é um visionário com grande força de vontade e capacidade de organização. Movimento apostólico profundo. Defeito dominante: ira e orgulho pela secundariedade que carrega ressentimentos.",pos:["Visão clara e estratégica","Liderança magnânima","Determinação inabalável","Capacidade de organização","Força de vontade excepcional"],neg:["Dureza e falta de sensibilidade","Ira e presunção","Dificuldade em perdoar","Rancor quando ofendido","Exigente demais com subordinados"],color:"#E74C3C"},
-  colérico:{name:"Colérico",emoji:"⚡",badge:"Emotivo · Ativo · Primário",e:1,a:1,r:-1,desc:"Impulsivo, aventureiro, cheio de energia. Você vive o momento com intensidade e se motiva facilmente. Otimista naturalmente. Humor hipocrático clássico. Defeito dominante: ira em resposta rápida e superficial.",pos:["Entusiasmo contagioso","Iniciativa e coragem","Flexibilidade mental","Audácia em decisões","Força para começar projetos"],neg:["Falta de profundidade","Impaciência e superficialidade","Impulsividade prejudicial","Irascibilidade em conflitos","Confiança excessiva em si mesmo"],color:"#E24B4A"},
-  sanguíneo:{name:"Sanguíneo",emoji:"☀️",badge:"Não-Emotivo · Ativo · Primário",e:-1,a:1,r:-1,desc:"Alegria em movimento. Você faz amigos com facilidade e traz vida a qualquer ambiente. Otimista genuíno. Humor hipocrático clássico. Defeito dominante: inconstância e busca de aprovação.",pos:["Otimismo genuíno","Adaptabilidade excepcional","Comunicação natural","Leveza e alegria","Generosidade espontânea"],neg:["Superficialidade emocional","Inconstância crônica","Promessas não cumpridas","Falta de profundidade","Busca obsessiva de aprovação"],color:"#EF9F27"},
-  sentimental:{name:"Sentimental",emoji:"💔",badge:"Emotivo · Inativo · Secundário",e:1,a:-1,r:1,desc:"Profundo e reflexivo. Você vive intensamente para dentro, com riqueza sentimental rara. Criativo e profundamente leal. Humor hipocrático como melancólico. Defeito dominante: tristeza e autocrítica que carrega feridas.",pos:["Profundidade extraordinária","Empatia intensa","Lealdade inabalável","Sensibilidade estética","Vida interior rica"],neg:["Tendência ao pessimismo","Dificuldade em superar mágoas","Autocrítica paralisante","Isolamento voluntário","Ruminação obsessiva"],color:"#9B59B6"},
-  apático:{name:"Apático",emoji:"🪨",badge:"Não-Emotivo · Inativo · Secundário",e:-1,a:-1,r:1,desc:"Tranquilo e sábio. Você é calmo, calculista e observador. Seguro em suas convicções. Paciência silenciosa. Defeito dominante: apatia e desinteresse que o paralisam.",pos:["Tranquilidade genuína","Paciência exemplar","Senso de justiça","Observação profunda","Independência emocional"],neg:["Apatia crônica","Desinteresse aparente","Passividade excessiva","Insensibilidade ao próximo","Falta de iniciativa"],color:"#34495E"},
-  fleumático:{name:"Fleumático",emoji:"🌊",badge:"Não-Emotivo · Ativo · Secundário",e:-1,a:1,r:1,desc:"O ancoradouro. Você é confiável, constante e paciente. Trabalha devagar mas com solidez. Estabilidade personificada. Humor hipocrático clássico. Defeito dominante: acídia e preguiça.",pos:["Confiabilidade absoluta","Paciência infinita","Constância admirável","Trabalho sólido e metódico","Equilíbrio emocional"],neg:["Acídia espiritual","Preguiça na ação","Resistência a mudanças","Pode parecer indiferente","Falta de iniciativa"],color:"#1ABC9C"},
-  nervoso:{name:"Nervoso",emoji:"🎨",badge:"Emotivo · Inativo · Primário",e:1,a:-1,r:-1,desc:"Sensível e artístico. Você é criativo, generoso e compassivo. Vida emocional variável. Dons especiais para o trato e expressão artística. Defeito dominante: sensibilidade que o torna escravizado ao momento.",pos:["Sensibilidade criativa","Generosidade do coração","Talento artístico","Compaixão natural","Intuição desenvolvida"],neg:["Suscetibilidade extrema","Variabilidade emocional","Inconsistência de ânimo","Influenciabilidade","Falta de disciplina"],color:"#F39C12"},
-  amorfo:{name:"Amorfo",emoji:"💨",badge:"Não-Emotivo · Inativo · Primário",e:-1,a:-1,r:-1,desc:"Influenciável e versátil. Você se adapta ao ambiente e ao momento. Otimista superficial. Sem direção clara. Defeito dominante: preguiça e negligência.",pos:["Adaptabilidade social","Imperturbabilidade","Otimismo descompromissado","Flexibilidade total","Leveza existencial"],neg:["Preguiça crônica","Negligência funcional","Falta de ideais","Influenciabilidade extrema","Incapacidade de comprometimento"],color:"#BDC3C7"}
+  apaixonado:{name:"Apaixonado",emoji:"🔥",badge:"Emotivo · Ativo · Secundário",e:1,a:1,r:1,desc:"Ardente, tenacioso, líder natural. Você é um visionário com grande força de vontade e capacidade de organização. Movimento apostólico profundo. Defeito dominante: ira e orgulho pela secundariedade que carrega ressentimentos.",pos:["Visão clara e estratégica","Liderança magnânima","Determinação inabalável","Capacidade de organização","Força de vontade excepcional"],neg:["Dureza e falta de sensibilidade","Ira e presunção","Dificuldade em perdoar","Rancor quando ofendido","Exigente demais com subordinados"],color:"#E74C3C",
+    santos:[{emoji:"✝️",nome:"Santa Teresa d'Ávila",desc:"Mística e reformadora — liderança ardente a serviço de Deus"},{emoji:"⚔️",nome:"São Paulo Apóstolo",desc:"Transformação radical e energia apostólica incansável"},{emoji:"🔥",nome:"Joana d'Arc",desc:"Fé inabalável, coragem e ação movida por missão divina"}]},
+  colérico:{name:"Colérico",emoji:"⚡",badge:"Emotivo · Ativo · Primário",e:1,a:1,r:-1,desc:"Impulsivo, aventureiro, cheio de energia. Você vive o momento com intensidade e se motiva facilmente. Otimista naturalmente. Humor hipocrático clássico. Defeito dominante: ira em resposta rápida e superficial.",pos:["Entusiasmo contagioso","Iniciativa e coragem","Flexibilidade mental","Audácia em decisões","Força para começar projetos"],neg:["Falta de profundidade","Impaciência e superficialidade","Impulsividade prejudicial","Irascibilidade em conflitos","Confiança excessiva em si mesmo"],color:"#E24B4A",
+    santos:[{emoji:"⚡",nome:"São Pedro Apóstolo",desc:"Entusiasmo e impulsividade convertidos em rocha da Igreja"},{emoji:"🛡️",nome:"São Jorge Mártir",desc:"Coragem e ação direta contra o mal com fé inabalável"},{emoji:"🌟",nome:"São Bartolomeu",desc:"Sinceridade direta e disposição imediata para seguir Cristo"}]},
+  sanguíneo:{name:"Sanguíneo",emoji:"☀️",badge:"Não-Emotivo · Ativo · Primário",e:-1,a:1,r:-1,desc:"Alegria em movimento. Você faz amigos com facilidade e traz vida a qualquer ambiente. Otimista genuíno. Humor hipocrático clássico. Defeito dominante: inconstância e busca de aprovação.",pos:["Otimismo genuíno","Adaptabilidade excepcional","Comunicação natural","Leveza e alegria","Generosidade espontânea"],neg:["Superficialidade emocional","Inconstância crônica","Promessas não cumpridas","Falta de profundidade","Busca obsessiva de aprovação"],color:"#EF9F27",
+    santos:[{emoji:"☀️",nome:"São Filipe Néri",desc:"Alegria contagiante e apostolado através do bom humor"},{emoji:"🎵",nome:"São Francisco de Sales",desc:"Gentileza e comunicação que conquistava corações com leveza"},{emoji:"✨",nome:"São João Bosco",desc:"Otimismo e amor pelos jovens transformando vidas com alegria"}]},
+  sentimental:{name:"Sentimental",emoji:"💔",badge:"Emotivo · Inativo · Secundário",e:1,a:-1,r:1,desc:"Profundo e reflexivo. Você vive intensamente para dentro, com riqueza sentimental rara. Criativo e profundamente leal. Humor hipocrático como melancólico. Defeito dominante: tristeza e autocrítica que carrega feridas.",pos:["Profundidade extraordinária","Empatia intensa","Lealdade inabalável","Sensibilidade estética","Vida interior rica"],neg:["Tendência ao pessimismo","Dificuldade em superar mágoas","Autocrítica paralisante","Isolamento voluntário","Ruminação obsessiva"],color:"#9B59B6",
+    santos:[{emoji:"🌹",nome:"Santa Teresinha do Menino Jesus",desc:"Sensibilidade profunda transformada em 'pequeno caminho' de amor"},{emoji:"📖",nome:"São João Apóstolo",desc:"Vida interior rica e amor contemplativo — o discípulo amado"},{emoji:"💧",nome:"São Agostinho",desc:"Profundidade emocional convertida em busca ardente de Deus"}]},
+  apático:{name:"Apático",emoji:"🪨",badge:"Não-Emotivo · Inativo · Secundário",e:-1,a:-1,r:1,desc:"Tranquilo e sábio. Você é calmo, calculista e observador. Seguro em suas convicções. Paciência silenciosa. Defeito dominante: apatia e desinteresse que o paralisam.",pos:["Tranquilidade genuína","Paciência exemplar","Senso de justiça","Observação profunda","Independência emocional"],neg:["Apatia crônica","Desinteresse aparente","Passividade excessiva","Insensibilidade ao próximo","Falta de iniciativa"],color:"#34495E",
+    santos:[{emoji:"🕊️",nome:"São Bento de Núrsia",desc:"Equilíbrio e ordem — 'Ora et Labora' como caminho de santidade"},{emoji:"📜",nome:"São Tomás de Aquino",desc:"Reflexão profunda e sabedoria que ordenava tudo com calma"},{emoji:"⚖️",nome:"São Tomás Moro",desc:"Serenidade e firmeza interior mesmo diante do martírio"}]},
+  fleumático:{name:"Fleumático",emoji:"🌊",badge:"Não-Emotivo · Ativo · Secundário",e:-1,a:1,r:1,desc:"O ancoradouro. Você é confiável, constante e paciente. Trabalha devagar mas com solidez. Estabilidade personificada. Humor hipocrático clássico. Defeito dominante: acídia e preguiça.",pos:["Confiabilidade absoluta","Paciência infinita","Constância admirável","Trabalho sólido e metódico","Equilíbrio emocional"],neg:["Acídia espiritual","Preguiça na ação","Resistência a mudanças","Pode parecer indiferente","Falta de iniciativa"],color:"#1ABC9C",
+    santos:[{emoji:"🌊",nome:"São João Maria Vianney",desc:"Paciência e constância no confessonário — pilar silencioso da Igreja"},{emoji:"🕯️",nome:"São José",desc:"Fidelidade discreta e trabalho constante a serviço da Sagrada Família"},{emoji:"📿",nome:"São Domingos de Gusmão",desc:"Método constante e perseverante na pregação e no rosário"}]},
+  nervoso:{name:"Nervoso",emoji:"🎨",badge:"Emotivo · Inativo · Primário",e:1,a:-1,r:-1,desc:"Sensível e artístico. Você é criativo, generoso e compassivo. Vida emocional variável. Dons especiais para o trato e expressão artística. Defeito dominante: sensibilidade que o torna escravizado ao momento.",pos:["Sensibilidade criativa","Generosidade do coração","Talento artístico","Compaixão natural","Intuição desenvolvida"],neg:["Suscetibilidade extrema","Variabilidade emocional","Inconsistência de ânimo","Influenciabilidade","Falta de disciplina"],color:"#F39C12",
+    santos:[{emoji:"🎨",nome:"Beato Angélico (Fra Angelico)",desc:"Sensibilidade artística inteiramente consagrada à beleza de Deus"},{emoji:"🌺",nome:"Santa Rosa de Lima",desc:"Vida interior intensa e sensibilidade convertida em penitência amorosa"},{emoji:"🕊️",nome:"São Francisco de Assis",desc:"Sensibilidade poética e compaixão por toda a criação de Deus"}]},
+  amorfo:{name:"Amorfo",emoji:"💨",badge:"Não-Emotivo · Inativo · Primário",e:-1,a:-1,r:-1,desc:"Influenciável e versátil. Você se adapta ao ambiente e ao momento. Otimista superficial. Sem direção clara. Defeito dominante: preguiça e negligência.",pos:["Adaptabilidade social","Imperturbabilidade","Otimismo descompromissado","Flexibilidade total","Leveza existencial"],neg:["Preguiça crônica","Negligência funcional","Falta de ideais","Influenciabilidade extrema","Incapacidade de comprometimento"],color:"#BDC3C7",
+    santos:[{emoji:"💨",nome:"São Bartolomeu Dias",desc:"Docilidade à graça que permite a Deus agir apesar das fraquezas"},{emoji:"🌾",nome:"São Zacarias",desc:"Acolhida simples e disponibilidade que abriu espaço para o milagre"},{emoji:"🕊️",nome:"São José de Cupertino",desc:"Simplicidade desapegada que se tornou instrumento de maravilhas"}]}
 };
 
 var tagStyles={
@@ -404,38 +614,118 @@ function renderAxisBars(scores){
   var container=document.getElementById('axisContainer');
   if(!container) return;
 
-  var eLabel=scores.e>50?'😊 Emotivo':'😐 Não-Emotivo';
-  var aLabel=scores.a>50?'⚡ Ativo':'😴 Inativo';
-  var rLabel=scores.r>50?'💭 Secundário':'⚡ Primário';
+  var e=scores&&scores.e!=null?scores.e:0;
+  var a=scores&&scores.a!=null?scores.a:0;
+  var r=scores&&scores.r!=null?scores.r:0;
 
-  var html='<div class="axis-bars">';
-  html+='<div class="axis-row anim-fadeup" style="animation-delay:1.0s">';
-  html+='<div class="axis-label">Emotividade</div>';
-  html+='<div class="axis-bar"><div class="axis-fill" style="width:0%" data-w="'+scores.e+'"></div></div>';
-  html+='<div class="axis-value">'+scores.e+'%</div>';
-  html+='<div class="axis-desc">'+eLabel+'</div>';
+  // Labels e configs de cada eixo
+  var eixos=[
+    {
+      key:'e', val:e,
+      nome:'Emotividade',
+      desc:'Refere-se à intensidade e à facilidade com que você sente e expressa emoções.',
+      icon:'🌟', iconBg:'#ede9fe', iconColor:'#7c3aed',
+      barColor:'#7F77DD',
+      labelPos:{emoji:'😊',txt:'Emotivo'},
+      labelNeg:{emoji:'😐',txt:'Não-Emotivo'},
+      resumoPos:'Você sente intensamente e se conecta com profundidade.',
+      resumoNeg:'Você é equilibrado emocionalmente e mantém a calma.'
+    },
+    {
+      key:'a', val:a,
+      nome:'Atividade',
+      desc:'Mostra seu nível de energia, iniciativa e disposição para agir e realizar.',
+      icon:'⚡', iconBg:'#fff3e0', iconColor:'#ea580c',
+      barColor:'#f97316',
+      labelPos:{emoji:'⚡',txt:'Ativo'},
+      labelNeg:{emoji:'😴',txt:'Inativo'},
+      resumoPos:'Você tem energia de sobra e gosta de transformar ideias em ação.',
+      resumoNeg:'Você prefere conservar energia e agir com cautela.'
+    },
+    {
+      key:'r', val:r,
+      nome:'Ressonância',
+      desc:'Indica sua sensibilidade às pessoas e ao ambiente ao seu redor.',
+      icon:'🎯', iconBg:'#ccfbf1', iconColor:'#0d9488',
+      barColor:'#14b8a6',
+      labelPos:{emoji:'💭',txt:'Secundário'},
+      labelNeg:{emoji:'⚡',txt:'Primário'},
+      resumoPos:'Você está em desenvolvimento e cada passo te aproxima da sua melhor versão.',
+      resumoNeg:'Você vive o presente com leveza e não carrega o passado.'
+    }
+  ];
+
+  // Texto de resumo geral baseado nos eixos
+  var resumoParts=[];
+  if(e>50) resumoParts.push('movido por emoções'); else resumoParts.push('de mente equilibrada');
+  if(a>50) resumoParts.push('com muita energia para agir'); else resumoParts.push('que prefere agir com cautela');
+  if(r>50) resumoParts.push('que busca conexões significativas'); else resumoParts.push('que vive o presente com leveza');
+  var resumoTxt='Você é '+resumoParts.join(', ')+'.<br><strong>Esse é o que te torna único!</strong>';
+
+  // Imagem do personagem baseada no temperamento atual
+  var _tipoAtual = window._result || 'amorfo';
+  var _imgMap = {
+    'apaixonado':'t-apaixonado.png','colérico':'t-colerico.png',
+    'sanguíneo':'t-sanguineo.png','sentimental':'t-sentimental.png',
+    'apático':'t-apatico.png','fleumático':'t-fleumatico.png',
+    'nervoso':'t-nervoso.png','amorfo':'t-amorfo.png'
+  };
+  var _imgFile = _imgMap[_tipoAtual] || 't-apatico.png';
+  var _imgSrc = 'assests/personagens/' + _imgFile;
+
+  // Montar HTML
+  var html='<div class="eixos-wrap anim-fadeup" style="animation-delay:.8s">';
+
+  // Header: título + personagem
+  html+='<div class="eixos-header">';
+  html+='<div class="eixos-personagem"><img src="'+_imgSrc+'" alt="Personagem" style="width:100%;max-width:140px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(127,119,221,.25))"></div>';
+  html+='<div><div class="eixos-titulo">Seu perfil nos <span>3 eixos</span></div>';
+  html+='<p class="eixos-resumo-txt">'+resumoTxt+'</p></div>';
   html+='</div>';
 
-  html+='<div class="axis-row anim-fadeup" style="animation-delay:1.1s">';
-  html+='<div class="axis-label">Atividade</div>';
-  html+='<div class="axis-bar"><div class="axis-fill" style="width:0%" data-w="'+scores.a+'"></div></div>';
-  html+='<div class="axis-value">'+scores.a+'%</div>';
-  html+='<div class="axis-desc">'+aLabel+'</div>';
+  // Cards dos 3 eixos
+  html+='<div class="eixos-cards">';
+  for(var i=0;i<eixos.length;i++){
+    var ex=eixos[i];
+    var isPos=ex.val>50;
+    var lbl=isPos?ex.labelPos:ex.labelNeg;
+    html+='<div class="eixo-card anim-fadeup" style="animation-delay:'+(1.0+i*0.12)+'s;background:'+ex.iconBg+';border-left:4px solid '+ex.barColor+'">';
+    html+='<div class="eixo-icon" style="background:'+ex.iconBg+'">'+ex.icon+'</div>';
+    html+='<div class="eixo-body">';
+    html+='<div class="eixo-name" style="color:'+ex.barColor+'">'+ex.nome+'</div>';
+    html+='<div class="eixo-desc-txt">'+ex.desc+'</div>';
+    html+='<div class="eixo-bar-track"><div class="eixo-bar-fill" style="background:'+ex.barColor+'" data-w="'+ex.val+'"></div></div>';
+    html+='<div class="eixo-bar-footer">';
+    html+='<span class="eixo-pct" style="color:'+ex.barColor+'">'+ex.val+'%</span>';
+
+    html+='</div></div></div>';
+  }
   html+='</div>';
 
-  html+='<div class="axis-row anim-fadeup" style="animation-delay:1.2s">';
-  html+='<div class="axis-label">Ressonância</div>';
-  html+='<div class="axis-bar"><div class="axis-fill" style="width:0%" data-w="'+scores.r+'"></div></div>';
-  html+='<div class="axis-value">'+scores.r+'%</div>';
-  html+='<div class="axis-desc">'+rLabel+'</div>';
+  // Resumo inferior
+  html+='<div class="eixos-resumo-titulo"><img src="./assests/s-icon-resumo.png" style="width:50px;height:auto;object-fit:contain;vertical-align:middle;margin-right:6px">Em resumo</div>';
+  html+='<div class="eixos-resumo">';
+  for(var j=0;j<eixos.length;j++){
+    var ex2=eixos[j];
+    var isPos2=ex2.val>50;
+    var lbl2=isPos2?ex2.labelPos:ex2.labelNeg;
+    html+='<div class="eixo-resumo-item" style="background:'+ex2.iconBg+';box-shadow:0 8px 24px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.07),0 4px 0 '+ex2.barColor+'">';
+    html+='<div class="eixo-resumo-titulo" style="color:'+ex2.barColor+'">'+lbl2.txt+'</div>';
+    html+='<div class="eixo-resumo-desc">'+(isPos2?ex2.resumoPos:ex2.resumoNeg)+'</div>';
+    html+='</div>';
+  }
   html+='</div>';
+
+  html+='<p style="text-align:center;font-size:.78rem;color:#a78bfa;margin-top:14px">Continue assim! Seu autoconhecimento é o seu maior poder.</p>';
   html+='</div>';
 
   container.innerHTML=html;
+
+  // Animar barras
   setTimeout(function(){
-    var bars=document.querySelectorAll('.axis-fill');
-    for(var i=0;i<bars.length;i++) bars[i].style.width=bars[i].getAttribute('data-w')+'%';
-  },300);
+    var fills=container.querySelectorAll('.eixo-bar-fill');
+    for(var k=0;k<fills.length;k++) fills[k].style.width=fills[k].getAttribute('data-w')+'%';
+  },400);
 }
 
 function renderScoreTags(scores){
@@ -444,6 +734,9 @@ function renderScoreTags(scores){
 }
 
 function fillResult(key,scores){
+  // Ocultar IMEDIATAMENTE hero e quiz antes de qualquer outra coisa
+  document.getElementById('hero').style.display='none';
+  document.getElementById('quiz').style.display='none';
   var t=temperamentos8[key];
   var resEl=document.getElementById('result');
   resEl.style.display='block';
@@ -465,6 +758,9 @@ function fillResult(key,scores){
   var negHtml='';
   for(var i=0;i<t.neg.length;i++) negHtml+='<div class="pf-item anim-slide" style="animation-delay:'+(0.65+i*0.1)+'s"><div class="pf-dot neg"></div>'+t.neg[i]+'</div>';
   document.getElementById('res-neg').innerHTML=negHtml;
+
+  // Santos removidos da view (mantidos apenas no PDF)
+
   renderAxisBars(scores);
   document.getElementById('hero').style.display='none';
   document.getElementById('quiz').style.display='none';
@@ -480,7 +776,10 @@ function generateAIResult(key,secondKey,scores,answersData){
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({winner:key,secondKey:secondKey,answers:answersData})
-  }).then(function(res){return res.json();}).then(function(data){
+  }).then(function(res){
+    if(res.status===429){var e=new Error('limite');e.status=429;throw e;}
+    return res.json();
+  }).then(function(data){
     if(!data.content||!data.content[0]){
       throw new Error(data.error||'Resposta vazia da API');
     }
@@ -501,8 +800,16 @@ function generateAIResult(key,secondKey,scores,answersData){
     aiLoading.style.display='none';
     saveToCache(key,secondKey,scores,answersData,html);
   }).catch(function(err){
-    aiContent.innerHTML='<div class="ai-error">Não foi possível gerar a análise personalizada agora. Você pode tentar novamente atualizando a página. 🙏</div>';
     aiLoading.style.display='none';
+    if(err&&err.status===429){
+      abrirLimiteModal();
+      // Salvar marcador especial — no refresh não retenta a API
+      saveToCache(key,secondKey,scores,answersData,'__LIMITE_ATINGIDO__');
+    } else {
+      var errHtml='<div class="ai-error">Não foi possível gerar a análise personalizada agora. Você pode tentar novamente atualizando a página. 🙏</div>';
+      aiContent.innerHTML=errHtml;
+      saveToCache(key,secondKey,scores,answersData,errHtml);
+    }
   });
 }
 
@@ -517,6 +824,9 @@ function goToResult(key){
 
 function startQuiz(){
   document.getElementById('hero').style.display='none';
+  document.getElementById('result').style.display='none';
+  document.getElementById('resultPaywall').style.display='none';
+  document.getElementById('resultFull').style.display='none';
   document.getElementById('quiz').style.display='block';
   render();
 }
@@ -545,10 +855,32 @@ function render(){
   obsEl.style.display=q.obs?'block':'none';
   var opts=document.getElementById('options');
   opts.innerHTML='';
+
+  // Garantir cores únicas por posição — resolve duplicatas quando opções mapeiam pro mesmo temperamento
+  var usedKeys=[];
+  var allKeys=Object.keys(tagStyles);
+  var optKeys=[];
+  for(var i=0;i<q.opts.length;i++){
+    var sc=q.opts[i].s;
+    var tk=determineTypeForOption(sc.e||0,sc.a||0,sc.r||0);
+    if(usedKeys.indexOf(tk)===-1){
+      usedKeys.push(tk);
+      optKeys.push(tk);
+    } else {
+      // Buscar próxima cor não usada
+      var fallback=null;
+      for(var k=0;k<allKeys.length;k++){
+        if(usedKeys.indexOf(allKeys[k])===-1){fallback=allKeys[k];break;}
+      }
+      if(!fallback) fallback=allKeys[i%allKeys.length];
+      usedKeys.push(fallback);
+      optKeys.push(fallback);
+    }
+  }
+
   for(var i=0;i<q.opts.length;i++){
     var b=document.createElement('button');
-    var sc=q.opts[i].s;
-    var topKey=determineTypeForOption(sc.e||0, sc.a||0, sc.r||0);
+    var topKey=optKeys[i];
     var ts=tagStyles[topKey];
     var isSelected=answers[current]===i;
     b.className='opt'+(isSelected?' selected':'');
@@ -666,19 +998,67 @@ function showResult(){
 
   fillResult(winner,normalizedScores);
 
+  // Mostrar resultado completo — paywall só aparece quando API retornar 429
+  desbloquearResultado();
+
   // Salvar no cache IMEDIATAMENTE (antes da API)
-  saveToCache(winner,secondKey,normalizedScores,answers,'<div style="text-align:center;color:#8885a8">Gerando análise...</div>');
+  saveToCache(winner,secondKey,normalizedScores,answers,'');
 
   generateAIResult(winner,secondKey,normalizedScores,answers,true);
+}
+
+function bloquearResultado(){
+  document.getElementById('resultPaywall').style.display='block';
+  document.getElementById('resultFull').style.display='none';
+}
+
+function desbloquearResultado(){
+  document.getElementById('resultPaywall').style.display='none';
+  document.getElementById('resultFull').style.display='block';
+  // Salvar estado desbloqueado no cache
+  try{
+    var raw=localStorage.getItem(CACHE_KEY);
+    if(raw){
+      var c=JSON.parse(raw);
+      c.unlocked=true;
+      localStorage.setItem(CACHE_KEY,JSON.stringify(c));
+    }
+  }catch(e){}
+  // Gerar análise IA apenas se não tiver conteúdo válido no cache
+  var key=window._result;
+  var scores=window._axes||{};
+  var cachedAi='';
+  try{var tmp=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}');cachedAi=tmp.aiHtml||'';}catch(e){}
+  var hasValidAi=cachedAi&&cachedAi!==AI_PLACEHOLDER&&cachedAi!=='__LIMITE_ATINGIDO__'&&cachedAi.indexOf('ai-error')===-1;
+  if(key){
+    if(hasValidAi){
+      document.getElementById('aiContent').innerHTML=cachedAi;
+      renderAxisBars(scores);
+    } else {
+      renderAxisBars(scores);
+      generateAIResult(key,window._secondType||null,scores,answers);
+    }
+  }
 }
 
 function restart(){
   localStorage.removeItem('quiz_temperamentos_v2');
   current=0;
   for(var i=0;i<answers.length;i++) answers[i]=null;
+  // Ocultar resultado e quiz, mostrar hero
   document.getElementById('result').style.display='none';
-  document.getElementById('aiContent').innerHTML='';
+  document.getElementById('quiz').style.display='none';
   document.getElementById('hero').style.display='block';
+  // Limpar conteúdo
+  document.getElementById('aiContent').innerHTML='';
+  document.getElementById('axisContainer').innerHTML='';
+  // Resetar visibilidade das seções internas
+  document.getElementById('resultPaywall').style.display='none';
+  document.getElementById('resultFull').style.display='none';
+  // Resetar estado global
+  window._result=null;
+  window._axes={};
+  window._secondType=null;
 }
 
 function isMobile(){
@@ -693,24 +1073,34 @@ function gerarPDFBlob(callback){
     scrollX:0,scrollY:-window.scrollY,
     windowWidth:Math.max(document.documentElement.offsetWidth,560),
     onclone:function(doc){
-      // Adiciona margens laterais e remove botões
       var r=doc.getElementById('result');
       if(r){r.style.padding='24px 28px';r.style.boxSizing='border-box';}
-      // Força visibilidade de todos os elementos animados
+
       var s=doc.createElement('style');
       s.textContent='*,*::before,*::after{animation:none!important;transition:none!important}'
         +'.anim-fadeup,.anim-popin,.anim-slide,.anim-bounce,.ai-section,.pf-item,.score-tag{opacity:1!important}'
-        +'.result-actions{display:none!important}';
+        // Esconder paywall e botões
+        +'#resultPaywall{display:none!important}'
+        +'.result-actions{display:none!important}'
+        +'.result-locked-section{display:block!important}'
+        // Garantir barras dos eixos preenchidas
+        +'.eixo-bar-fill{transition:none!important}';
       doc.head.appendChild(s);
-      // Aplica largura das barras de score
-      doc.querySelectorAll('.score-tag-bg').forEach(function(n){
+
+      // Aplicar largura das barras dos eixos
+      doc.querySelectorAll('.eixo-bar-fill').forEach(function(n){
         var w=n.getAttribute('data-w');if(w)n.style.width=w+'%';
       });
+
+      // Mostrar resultado completo (caso esteja bloqueado)
+      var full=doc.getElementById('resultFull');
+      if(full) full.style.display='block';
+      var paywall=doc.getElementById('resultPaywall');
+      if(paywall) paywall.style.display='none';
     }
   }).then(function(canvas){
     var imgData=canvas.toDataURL('image/jpeg',0.92);
-    // Página única com dimensão exata do conteúdo (evita cortes)
-    var pdfW=210; // mm A4 largura
+    var pdfW=210;
     var pdfH=Math.ceil(canvas.height*pdfW/canvas.width);
     var pdf=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:[pdfW,pdfH]});
     pdf.addImage(imgData,'JPEG',0,0,pdfW,pdfH);
@@ -742,7 +1132,8 @@ function share(){
     });
     var cache={};
     try{cache=JSON.parse(localStorage.getItem('quiz_temperamentos_v2')||'{}');}catch(e){}
-    var payload=JSON.stringify({winner:window._result||cache.winner,secondKey:cache.secondKey||null,scores:cache.scores||{},ai:aiData});
+    var axesPayload=window._axes||cache.scores||{};
+    var payload=JSON.stringify({winner:window._result||cache.winner,secondKey:window._secondType||cache.secondKey||null,scores:axesPayload,ai:aiData});
     var form=document.createElement('form');
     form.method='POST';form.action='/api/gerar-pdf.php';form.target='_blank';
     var inp=document.createElement('input');
@@ -816,6 +1207,158 @@ function abrirShareSheet(name){
   });
 }
 
+// Buscar config do servidor e atualizar valores no modal e paywall
+var _appConfig = { limite_consultas: 4, valor_pix: '1,00' };
+fetch('/api/config-public.php?v='+Date.now(), {cache:'no-store'})
+  .then(function(r){ return r.json(); })
+  .then(function(cfg){
+    _appConfig = cfg;
+    var els = document.querySelectorAll('#lmValorDesc,#lmValorBtn,#paywallValor,#paywallValorBtn');
+    for(var i=0;i<els.length;i++) els[i].textContent = cfg.valor_pix;
+  })
+  .catch(function(){});
+
+var _pixPaymentId = null;
+var _pixPollingInterval = null;
+var _pixTimerInterval = null;
+
+function iniciarPix(){
+  // Trocar para tela do QR
+  document.getElementById('lmTelaInicial').style.display='none';
+  document.getElementById('lmStars').style.display='none';
+  document.getElementById('lmTelaQR').style.display='block';
+  document.getElementById('lmValorQR').textContent = document.getElementById('lmValorBtn').textContent;
+
+  // Chamar backend para criar cobrança
+  fetch('/api/criar-pix.php', {method:'POST', cache:'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data.error){ throw new Error(data.error); }
+
+      _pixPaymentId = data.payment_id;
+
+      // Mostrar QR Code
+      document.getElementById('lmQrLoading').style.display='none';
+      if(data.qr_base64){
+        var img = document.getElementById('lmQrImg');
+        img.src = 'data:image/png;base64,' + data.qr_base64;
+        img.style.display='block';
+      }
+      if(data.qr_code){
+        var ta = document.getElementById('lmCopiaCola');
+        ta.value = data.qr_code;
+        ta.style.display='block';
+        document.getElementById('lmBtnCopiar').style.display='block';
+      }
+      document.getElementById('lmPolling').style.display='flex';
+
+      // Timer de expiração
+      if(data.expires_at){
+        _pixTimerInterval = setInterval(function(){
+          var diff = data.expires_at - Math.floor(Date.now()/1000);
+          if(diff <= 0){ clearInterval(_pixTimerInterval); document.getElementById('lmTimer').textContent='QR Code expirado. Volte e tente novamente.'; return; }
+          var m = Math.floor(diff/60), s = diff%60;
+          document.getElementById('lmTimer').textContent = 'Expira em ' + m + ':' + (s<10?'0':'')+s;
+        }, 1000);
+      }
+
+      // Polling a cada 4 segundos
+      _pixPollingInterval = setInterval(function(){
+        verificarPagamento();
+      }, 4000);
+    })
+    .catch(function(err){
+      document.getElementById('lmQrLoading').textContent = '❌ Erro ao gerar QR Code. Tente novamente.';
+    });
+}
+
+function verificarPagamento(){
+  if(!_pixPaymentId) return;
+  fetch('/api/status-pix.php?payment_id='+_pixPaymentId, {cache:'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data.status === 'paid'){
+        // Parar polling e timer
+        clearInterval(_pixPollingInterval);
+        clearInterval(_pixTimerInterval);
+
+        // Mostrar tela de sucesso
+        document.getElementById('lmTelaQR').style.display='none';
+        document.getElementById('lmTelaPago').style.display='block';
+
+        // Fechar modal e desbloquear resultado após 2s
+        setTimeout(function(){
+          fecharLimiteModal();
+          desbloquearResultado();
+          // Scroll para o topo do resultado
+          var resultEl = document.getElementById('result');
+          if(resultEl) resultEl.scrollIntoView({behavior:'smooth', block:'start'});
+          setTimeout(voltarTelaInicial, 500);
+        }, 2000);
+
+      } else if(data.status === 'expired'){
+        clearInterval(_pixPollingInterval);
+        clearInterval(_pixTimerInterval);
+        document.getElementById('lmTimer').textContent = 'Pagamento expirado. Volte e tente novamente.';
+        document.getElementById('lmPolling').style.display='none';
+      }
+    })
+    .catch(function(){});
+}
+
+function copiarPix(el){
+  var txt = el.value || el.textContent;
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt); }
+  // Feedback no botão
+  var btn = document.getElementById('lmBtnCopiar');
+  if(btn){
+    btn.textContent = '✅ Copiado!';
+    btn.style.background = '#dcfce7';
+    btn.style.borderColor = '#86efac';
+    btn.style.color = '#166534';
+    setTimeout(function(){
+      btn.textContent = '📋 Copiar código Pix';
+      btn.style.background = '#f5f3ff';
+      btn.style.borderColor = '#c4b5fd';
+      btn.style.color = '#6366f1';
+    }, 2500);
+  }
+}
+
+function voltarTelaInicial(){
+  clearInterval(_pixPollingInterval);
+  clearInterval(_pixTimerInterval);
+  _pixPaymentId = null;
+  document.getElementById('lmTelaQR').style.display='none';
+  document.getElementById('lmTelaPago').style.display='none';
+  document.getElementById('lmTelaInicial').style.display='block';
+  document.getElementById('lmStars').style.display='block';
+  document.getElementById('lmQrLoading').style.display='block';
+  document.getElementById('lmQrImg').style.display='none';
+  document.getElementById('lmCopiaCola').style.display='none';
+  document.getElementById('lmBtnCopiar').style.display='none';
+  document.getElementById('lmPolling').style.display='none';
+  document.getElementById('lmTimer').textContent='';
+}
+
+function abrirLimiteModal(){
+  var overlay=document.getElementById('limiteOverlay');
+  overlay.style.display='flex';
+  document.body.style.overflow='hidden';
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    document.getElementById('limiteModal').classList.add('ativo');
+  });});
+}
+
+function fecharLimiteModal(){
+  var modal=document.getElementById('limiteModal');
+  modal.classList.remove('ativo');
+  setTimeout(function(){
+    document.getElementById('limiteOverlay').style.display='none';
+    document.body.style.overflow='';
+  },320);
+}
+
 function fecharShareSheet(){
   document.getElementById('shareOverlay').style.display='none';
   document.getElementById('shareSheet').style.display='none';
@@ -833,20 +1376,31 @@ function showToast(msg){
 var CACHE_KEY='quiz_temperamentos_v2';
 function saveToCache(winner,secondKey,scores,answersData,aiHtml){
   try{
+    // Preservar unlocked se já estava salvo
+    var prev={};
+    try{prev=JSON.parse(localStorage.getItem(CACHE_KEY)||'{}');}catch(e){}
     localStorage.setItem(CACHE_KEY,JSON.stringify({
-      winner:winner,secondKey:secondKey,scores:scores,answers:answersData,aiHtml:aiHtml
+      winner:winner,secondKey:secondKey,scores:scores,answers:answersData,aiHtml:aiHtml,
+      unlocked: prev.unlocked||false
     }));
   }catch(e){}
 }
+var AI_PLACEHOLDER='<div style="text-align:center;color:#8885a8">Gerando análise...</div>';
+
 function loadFromCache(){
   try{
     var raw=localStorage.getItem(CACHE_KEY);
     if(!raw) return false;
     var c=JSON.parse(raw);
-    if(!c||!c.winner||!c.aiHtml) return false;
+    // Só precisa de winner — aiHtml pode estar vazio ou ser placeholder
+    if(!c||!c.winner) return false;
+
     // Restaura estado global
     window._result=c.winner;
+    window._axes=c.scores||{};
+    window._secondType=c.secondKey||null;
     if(c.answers) answers=c.answers;
+
     // Bloco secundário
     if(c.secondKey&&temperamentos8[c.secondKey]){
       var t2=temperamentos8[c.secondKey];
@@ -859,10 +1413,33 @@ function loadFromCache(){
     }else{
       document.getElementById('res-secondary').style.display='none';
     }
-    // Reconstrói resultado estático
-    fillResult(c.winner,c.scores||{});
-    // Restaura conteúdo da IA
-    document.getElementById('aiContent').innerHTML=c.aiHtml;
+
+    // Garantir que hero e quiz estão ocultos
+    document.getElementById('hero').style.display='none';
+    document.getElementById('quiz').style.display='none';
+    document.getElementById('result').style.display='block';
+
+    // Reconstrói resultado
+    fillResult(c.winner, c.scores||{});
+
+    // Garantir paywall oculto e resultado completo visível
+    document.getElementById('resultPaywall').style.display='none';
+    document.getElementById('resultFull').style.display='block';
+    renderAxisBars(c.scores||{});
+    // Restaura IA ou retenta
+    var aiEl=document.getElementById('aiContent');
+    if(c.aiHtml==='__LIMITE_ATINGIDO__'){
+      // Limite atingido — não retenta, mostra CTA para pagar
+      aiEl.innerHTML='<div class="ai-error" style="cursor:pointer" onclick="abrirLimiteModal()">🔒 Análise de IA bloqueada. <strong style="color:#6366f1">Clique aqui para desbloquear.</strong></div>';
+    } else {
+      var needsRetry=!c.aiHtml||c.aiHtml===AI_PLACEHOLDER||c.aiHtml.indexOf('ai-error')!==-1;
+      if(needsRetry){
+        generateAIResult(c.winner,c.secondKey||null,c.scores||{},c.answers||[]);
+      } else {
+        aiEl.innerHTML=c.aiHtml;
+      }
+    }
+
     return true;
   }catch(e){return false;}
 }

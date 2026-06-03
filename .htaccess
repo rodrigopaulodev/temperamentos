@@ -1,0 +1,21 @@
+# Desabilitar cache para HTML
+<FilesMatch "\.(html|htm|php)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
+# Sem cache para nada nesta pasta
+<FilesMatch ".*">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</FilesMatch>
+
+# LiteSpeed: desabilitar cache completamente
+<IfModule LiteSpeed>
+    CacheDisable public /
+</IfModule>
+<IfModule mod_headers.c>
+    Header always set X-LiteSpeed-Cache-Control "no-cache"
+</IfModule>
