@@ -200,7 +200,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
       <span>Murilo Frizanco · <em>Os 4 Temperamentos</em></span>
     </div>
   </div>
-  <div class="dev-credit">Desenvolvido por <strong>Rodrigo Paulo</strong> com IA</div>
+  <div class="dev-credit">Desenvolvido por <strong>Rodrigo Paulo</strong></div>
 </div>
 
 <div class="quiz-wrap" id="quiz">
@@ -264,6 +264,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <!-- SEÇÕES BLOQUEADAS -->
   <div id="resultFull" class="result-locked-section">
     <div class="divider"></div>
+    <div class="chart-section">
+      <div class="axis-container" id="axisContainer"></div>
+    </div>
+    <div class="divider"></div>
     <div class="pf-grid">
       <div class="pf-section">
         <div class="pf-heading">Pontos fortes</div>
@@ -273,10 +277,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
         <div class="pf-heading">A desenvolver</div>
         <div class="pf-list" id="res-neg"></div>
       </div>
-    </div>
-    <div class="divider"></div>
-    <div class="chart-section">
-      <div class="axis-container" id="axisContainer"></div>
     </div>
     <div class="divider"></div>
     <div class="ai-result">
@@ -295,7 +295,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   <div class="footer">
     Sistema Heymans-Le Senne · Heymans & Wiersma · Pe. Gonzalez · Royo Marín<br>
     Padre Paulo Ricardo · Murilo Frizanco<br>
-    <strong>Desenvolvido por Rodrigo Paulo</strong> com IA
+    <strong>Desenvolvido por Rodrigo Paulo</strong>
   </div>
 </div>
 
@@ -689,7 +689,7 @@ function renderAxisBars(scores){
     var ex=eixos[i];
     var isPos=ex.val>50;
     var lbl=isPos?ex.labelPos:ex.labelNeg;
-    html+='<div class="eixo-card anim-fadeup" style="animation-delay:'+(1.0+i*0.12)+'s;background:'+ex.iconBg+';border-left:4px solid '+ex.barColor+'">';
+    html+='<div class="eixo-card anim-fadeup" style="animation-delay:'+(1.0+i*0.12)+'s;background:#fff;border-left:4px solid '+ex.barColor+'">';
     html+='<div class="eixo-icon" style="background:'+ex.iconBg+'">'+ex.icon+'</div>';
     html+='<div class="eixo-body">';
     html+='<div class="eixo-name" style="color:'+ex.barColor+'">'+ex.nome+'</div>';
@@ -709,7 +709,7 @@ function renderAxisBars(scores){
     var ex2=eixos[j];
     var isPos2=ex2.val>50;
     var lbl2=isPos2?ex2.labelPos:ex2.labelNeg;
-    html+='<div class="eixo-resumo-item" style="background:'+ex2.iconBg+';box-shadow:0 8px 24px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.07),0 4px 0 '+ex2.barColor+'">';
+    html+='<div class="eixo-resumo-item" style="background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.07),0 4px 0 '+ex2.barColor+'">';
     html+='<div class="eixo-resumo-titulo" style="color:'+ex2.barColor+'">'+lbl2.txt+'</div>';
     html+='<div class="eixo-resumo-desc">'+(isPos2?ex2.resumoPos:ex2.resumoNeg)+'</div>';
     html+='</div>';
